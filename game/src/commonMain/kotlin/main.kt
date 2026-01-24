@@ -61,29 +61,9 @@ private suspend fun Stage.mainStage() {
     val boardView = BoardView(factory = tileFactory)
     addChild(view = boardView)
 
-    // 3. Create a test level layout (Small Pyramid)
-    // Using a coordinate system where 1 unit = half tile width/height roughly
-    val levelData = listOf(
-        // Layer 0 (Base) - 3x3 grid
-        // Row 0
-        TilePosition(layer = 0, x = 0, y = 0, tileId = 41),
-        TilePosition(layer = 0, x = 2, y = 0, tileId = 40),
-        TilePosition(layer = 0, x = 4, y = 0, tileId = 39),
-        // Row 1
-        TilePosition(layer = 0, x = 0, y = 2, tileId = 38),
-        TilePosition(layer = 0, x = 2, y = 2, tileId = 37),
-        TilePosition(layer = 0, x = 4, y = 2, tileId = 36),
-        // Row 2
-        TilePosition(layer = 0, x = 0, y = 4, tileId = 35),
-        TilePosition(layer = 0, x = 2, y = 4, tileId = 34),
-        TilePosition(layer = 0, x = 4, y = 4, tileId = 33),
-
-        // Layer 1 (Middle) - Centered on top
-//        TilePosition(layer = 1, x = 1, y = 1, tileId = 9),
-
-        // Layer 2 (Top) - Peak
-//        TilePosition(layer = 2, x = 2, y = 2, tileId = 10)
-    )
+    // 3. Create the Deck and Generate Level
+    val deck = tileFactory.createDeck()
+    val levelData = LevelGenerator.generateTurtleLayout(deck)
 
     // 4. Render
     boardView.renderBoard(tiles = levelData)
