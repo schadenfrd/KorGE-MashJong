@@ -2,21 +2,16 @@ package com.creature.mashjong
 
 import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
-import korlibs.image.text.TextAlignment
 import korlibs.korge.Korge
 import korlibs.korge.KorgeDisplayMode
 import korlibs.korge.internal.DefaultViewport
 import korlibs.korge.view.Stage
 import korlibs.korge.view.align.centerOnStage
-import korlibs.korge.view.text
-import korlibs.logger.Logger
 import korlibs.math.geom.Anchor
 import korlibs.math.geom.Scale
 import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import korlibs.render.GameWindow
-
-val LOG_LEVEL = Logger.Level.DEBUG
 
 suspend fun main() = gameStart()
 
@@ -54,13 +49,42 @@ suspend fun gameStart(
     mainStage()
 }
 
-private fun Stage.mainStage() {
-    val helloText = text(
-        text = "Hello Mish-Mash!",
-        textSize = 128.0,
-        color = Colors.CYAN,
-        alignment = TextAlignment.MIDDLE_CENTER
-    ).centerOnStage()
+private suspend fun Stage.mainStage() {
+    // 1. Initialize Factory and load assets
+    val tileFactory = TileFactory()
+    tileFactory.loadAssets()
 
-    addChild(helloText)
+    // 2. Create BoardView
+    val boardView = BoardView(tileFactory)
+    addChild(boardView)
+
+    // 3. Create a test level layout (Small Pyramid)
+    // Using a coordinate system where 1 unit = half tile width/height roughly
+    val levelData = listOf(
+        // Layer 0 (Base) - 3x3 grid
+        // Row 0
+        TilePosition(layer = 0, x = 0, y = 0, tileId = 1),
+        TilePosition(layer = 0, x = 2, y = 0, tileId = 1),
+        TilePosition(layer = 0, x = 4, y = 0, tileId = 1),
+        // Row 1
+        TilePosition(layer = 0, x = 0, y = 2, tileId = 1),
+        TilePosition(layer = 0, x = 2, y = 2, tileId = 1),
+        TilePosition(layer = 0, x = 4, y = 2, tileId = 1),
+        // Row 2
+        TilePosition(layer = 0, x = 0, y = 4, tileId = 1),
+        TilePosition(layer = 0, x = 2, y = 4, tileId = 1),
+        TilePosition(layer = 0, x = 4, y = 4, tileId = 1),
+
+        // Layer 1 (Middle) - Centered on top
+        TilePosition(layer = 1, x = 1, y = 1, tileId = 1),
+
+        // Layer 2 (Top) - Peak
+        TilePosition(layer = 2, x = 2, y = 2, tileId = 1)
+    )
+
+    // 4. Render
+    boardView.renderBoard(levelData)
+
+    // 5. Center on stage
+    boardView.centerOnStage()
 }
