@@ -11,7 +11,7 @@ class BoardView(val factory: TileFactory) : Container() {
     
     // Constants for positioning
     private val overlapX = Tile.WIDTH / 2
-    private val overlapY = Tile.HEIGHT * 0.75 
+    private val overlapY = Tile.HEIGHT / 2
     private val layerOffset = Point(x = -4.0, y = -6.0)
 
     fun renderBoard(tiles: List<TilePosition>) {

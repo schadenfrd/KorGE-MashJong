@@ -58,3 +58,73 @@
     "NEW INSTRUCTION": "WHEN Gradle error shows Unresolved platforms: [js] for project :game THEN configure js(IR) target in :game multiplatform module"
 }
 
+[2026-01-24 16:09] - Updated by Junie - Error analysis
+{
+    "TYPE": "missing context",
+    "TOOL": "bash",
+    "ERROR": "Directory not found: game/src/commonMain/resources",
+    "ROOT CAUSE": "The resources directory does not exist in the game module yet.",
+    "PROJECT NOTE": "Korge assets should be placed under game/src/commonMain/resources; create this path before use.",
+    "NEW INSTRUCTION": "WHEN ls shows 'No such file or directory' for resources THEN create resources directory path"
+}
+
+[2026-01-24 16:19] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "multi_edit",
+    "ERROR": "Unresolved reference: readBitmap",
+    "ROOT CAUSE": "Missing import for readBitmap extension in korlibs.image.format.",
+    "PROJECT NOTE": "In Korge 6, add import korlibs.image.format.readBitmap when using resourcesVfs.readBitmap().",
+    "NEW INSTRUCTION": "WHEN Kotlin error shows unresolved reference readBitmap THEN import korlibs.image.format.readBitmap"
+}
+
+[2026-01-24 16:53] - Updated by Junie - Error analysis
+{
+    "TYPE": "env/setup",
+    "TOOL": "Gradle",
+    "ERROR": "kotlinStoreYarnLock failed due to changed lock file",
+    "ROOT CAUSE": "The Yarn lockfile drift was detected by kotlinStoreYarnLock during tests.",
+    "PROJECT NOTE": "This Korge project enforces yarn.lock consistency; update it before running tests.",
+    "NEW INSTRUCTION": "WHEN Gradle task kotlinStoreYarnLock fails in tests THEN run ./gradlew kotlinUpgradeYarnLock and commit lock"
+}
+
+[2026-01-24 18:36] - Updated by Junie - Error analysis
+{
+    "TYPE": "env/setup",
+    "TOOL": "-",
+    "ERROR": "Asset not found: atlas_classic_mahjong.png",
+    "ROOT CAUSE": "The image isn’t packaged in the APK at the expected path/name for resourcesVfs.",
+    "PROJECT NOTE": "Place the image under game/src/commonMain/resources and reference the exact filename (case-sensitive). Ensure code and asset name match; avoid using tiles.png in docs if code loads atlas_classic_mahjong.png.",
+    "NEW INSTRUCTION": "WHEN FileNotFoundException for resourcesVfs asset THEN ensure asset exists in game/src/commonMain/resources with exact name"
+}
+
+[2026-01-24 20:53] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "TileFactory.loadAtlas",
+    "ERROR": "Uniform grid slicing ignores uneven row spacing",
+    "ROOT CAUSE": "loadAtlas slices by fixed tileWidth/tileHeight across all rows, but the atlas has per-row gaps (e.g., a missing column at index 4 on rows 3–4) and possibly different margins, so indices shift and sprites are cut incorrectly.",
+    "PROJECT NOTE": "Handle rows 0–2 as 9 contiguous columns; for rows 3–4, skip the gap at column 4 and use explicit sliceWithSize(x,y,w,h) rectangles. Do not compute cols/rows via integer division; instead map exact rectangles for each tile per the atlas’ layout.",
+    "NEW INSTRUCTION": "WHEN atlas has gap columns or irregular row spacing THEN slice using per-row explicit rectangles"
+}
+
+[2026-01-24 21:07] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "TileFactory.loadAtlas",
+    "ERROR": "Uniform slicing ignores tile size and inter-group gaps",
+    "ROOT CAUSE": "loadAtlas uses a fixed grid (43x54) and contiguous columns, but the atlas tiles are 41x53 with 3px spacing and special inter-group gaps, so slice indices and rectangles are misaligned.",
+    "PROJECT NOTE": "Update TileFactory to compute explicit rectangles: tile=41x53, spacing=3px; rows 0–2 are contiguous; in honors row insert a 17px gap between Dragons and Winds; in specials row insert a 47px gap between Seasons and Flowers; map Winds, Dragons, Seasons, Flowers by explicit x offsets.",
+    "NEW INSTRUCTION": "WHEN atlas shows 41x53 tiles with 3px spacing and row gaps THEN slice using explicit per-row rectangles with given offsets"
+}
+
+[2026-01-24 21:11] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "TileFactory.loadAtlas",
+    "ERROR": "Uniform grid slicing misaligned; gaps and sizes ignored",
+    "ROOT CAUSE": "loadAtlas used a fixed 43x54 contiguous grid and ignored 41x53 tiles, 3px spacing, and special inter-group gaps, so slice indices and rectangles were wrong.",
+    "PROJECT NOTE": "In TileFactory.kt, slice rows 0–2 as 41x53 tiles with 3px spacing; on row 3 insert a 17px gap between Dragons and Winds; on row 4 insert a 47px gap between Seasons and Flowers; build slices via explicit sliceWithSize(x,y,41,53).",
+    "NEW INSTRUCTION": "WHEN slicing mahjong atlas with 41x53 tiles and group gaps THEN compute explicit per-row rectangles using 3px spacing and gap offsets"
+}
+

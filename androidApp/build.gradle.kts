@@ -35,6 +35,12 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    sourceSets {
+        getByName("main") {
+            assets.srcDirs(project(":game").file("src/commonMain/resources"))
+        }
+    }
 }
 
 dependencies {
