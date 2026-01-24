@@ -128,3 +128,13 @@
     "NEW INSTRUCTION": "WHEN slicing mahjong atlas with 41x53 tiles and group gaps THEN compute explicit per-row rectangles using 3px spacing and gap offsets"
 }
 
+[2026-01-24 21:42] - Updated by Junie - Error analysis
+{
+    "TYPE": "env/setup",
+    "TOOL": "resourcesVfs",
+    "ERROR": "iOS bundle missing atlas_classic_mahjong.png",
+    "ROOT CAUSE": "The atlas image was not copied into the iOS app bundle, so resourcesVfs cannot find it at runtime.",
+    "PROJECT NOTE": "Keep atlas_classic_mahjong.png in game/src/commonMain/resources and add the KMP framework's resources to the iOS target's Copy Bundle Resources phase so they ship inside the .app.",
+    "NEW INSTRUCTION": "WHEN iOS FileNotFoundException for atlas asset THEN add KMP resources to Xcode Copy Bundle Resources"
+}
+

@@ -12,8 +12,8 @@ class Tile(
 ) : Container() {
 
     companion object {
-        const val WIDTH = 120.0
-        const val HEIGHT = 160.0
+        const val WIDTH = 160.0
+        const val HEIGHT = 200.0
 
         const val PADDING = 0
 

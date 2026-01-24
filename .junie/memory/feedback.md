@@ -110,3 +110,11 @@
     "NEW INSTRUCTION": "WHEN slicing the current mahjong atlas THEN apply 41x53 tiles and specified spacings/gaps"
 }
 
+[2026-01-24 21:42] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "Resource not found (iOS)",
+    "EXPECTATION": "They expected the atlas image to be packaged into the iOS app bundle and loadable via resourcesVfs without crashing when starting the game on iOS.",
+    "NEW INSTRUCTION": "WHEN iOS FileNotFound for atlas THEN place file in commonMain/resources and reference exact-case filename"
+}
+
