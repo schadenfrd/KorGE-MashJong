@@ -158,3 +158,23 @@
     "NEW INSTRUCTION": "WHEN proposing architecture for new feature THEN include file paths, build steps, and a basic test"
 }
 
+[2026-01-27 09:33] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "update tile view,handle input,wire main,state sync/animations",
+    "BOTTLENECK": "Core logic was added but not integrated into the UI flow.",
+    "PROJECT NOTE": "Expose getTileInfo as provider in main when constructing MahjongGame and pass click callbacks to BoardView.",
+    "NEW INSTRUCTION": "WHEN core logic class is created THEN immediately wire UI callbacks and selection visuals"
+}
+
+[2026-01-27 09:58] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "clarify rules, update rules doc",
+    "BOTTLENECK": "Ambiguity about vertical neighbors not explicitly addressed.",
+    "PROJECT NOTE": "Mahjong Solitaire only considers tiles above as blocking; tiles below do not block. Ensure isTileFree checks overlap only on layer+1.",
+    "NEW INSTRUCTION": "WHEN user asks rules clarification THEN restate rule precisely and resolve edge case with rationale"
+}
+

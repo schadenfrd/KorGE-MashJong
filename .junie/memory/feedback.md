@@ -118,3 +118,19 @@
     "NEW INSTRUCTION": "WHEN iOS FileNotFound for atlas THEN place file in commonMain/resources and reference exact-case filename"
 }
 
+[2026-01-27 09:27] - Updated by Junie
+{
+    "TYPE": "positive",
+    "CATEGORY": "Plan approved",
+    "EXPECTATION": "They confirmed the rules/implementation plan is good and want it implemented now.",
+    "NEW INSTRUCTION": "WHEN user approves a proposed plan THEN implement it with code and integration steps"
+}
+
+[2026-01-27 10:04] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "Free tile side-blocking",
+    "EXPECTATION": "A tile with neighbors on both its left and right on the same layer must not be selectable.",
+    "NEW INSTRUCTION": "WHEN detecting side neighbors THEN consider footprint overlap with tolerance, not exact x equality"
+}
+

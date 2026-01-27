@@ -57,17 +57,45 @@ private suspend fun Stage.mainStage() {
     val atlas = resourcesVfs["atlas_classic_mahjong.png"].readBitmap()
     tileFactory.loadAtlas(atlas = atlas)
 
-    // 2. Create BoardView
-    val boardView = BoardView(factory = tileFactory)
-    addChild(view = boardView)
-
-    // 3. Create the Deck and Generate Level
+    // 2. Create the Deck and Generate Level
     val deck = tileFactory.createDeck()
     val levelData = LevelGenerator.generateTurtleLayout(deck)
 
-    // 4. Render
+    // 3. Initialize Game Logic
+    val game = MahjongGame(levelData) { id -> tileFactory.getTileInfo(id) }
+
+    // 4. Create BoardView with interaction
+    lateinit var boardView: BoardView
+    boardView = BoardView(factory = tileFactory) { pos ->
+        when (val result = game.onTileClick(pos)) {
+            MatchResult.Ignored -> {}
+            MatchResult.Blocked -> {
+                // Optional: Shake or sound
+                println("Blocked: $pos")
+            }
+            MatchResult.Deselected -> {
+                boardView.setSelection(null)
+            }
+            is MatchResult.Selected -> {
+                boardView.setSelection(result.tile)
+            }
+            is MatchResult.Match -> {
+                boardView.removeTiles(listOf(result.tileA, result.tileB))
+                boardView.setSelection(null)
+                
+                // Check win condition
+                if (game.getActiveTiles().isEmpty()) {
+                    println("VICTORY!")
+                }
+            }
+        }
+    }
+    
+    addChild(view = boardView)
+
+    // 5. Render
     boardView.renderBoard(tiles = levelData)
 
-    // 5. Center on stage
+    // 6. Center on stage
     boardView.centerOnStage()
 }

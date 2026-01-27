@@ -1,10 +1,16 @@
 package com.creature.mashjong
 
 import korlibs.image.bitmap.BmpSlice
+import korlibs.image.color.Colors
 import korlibs.korge.view.Container
+import korlibs.korge.view.RoundRect
 import korlibs.korge.view.align.centerOn
 import korlibs.korge.view.image
+import korlibs.korge.view.roundRect
 import korlibs.korge.view.scale
+import korlibs.korge.view.xy
+import korlibs.math.geom.RectCorners
+import korlibs.math.geom.Size
 
 class Tile(
     val id: Int,
@@ -14,22 +20,20 @@ class Tile(
     companion object {
         const val WIDTH = 140.0
         const val HEIGHT = 180.0
-
         const val PADDING = 0
-
         const val FACE_WIDTH = WIDTH - PADDING
         const val FACE_HEIGHT = HEIGHT - PADDING
     }
+    
+    private var selectionView: RoundRect
 
     init {
-//        // 1. Draw the physical tile body
-//        roundRect(
-//            size = Size(WIDTH, HEIGHT),
-//            radius = RectCorners(8.0),
-//            fill = Colors.WHITESMOKE,
-//            stroke = Colors.BLACK,
-//            strokeThickness = 1.5
-//        )
+        // 1. Drop Shadow (for depth)
+        roundRect(
+            size = Size(WIDTH, HEIGHT),
+            radius = RectCorners(8.0),
+            fill = Colors.BLACK.withAd(0.5),
+        ).xy(4.0, 4.0)
 
         // 2. Draw the face image centered on the tile
         image(texture = face).apply {
@@ -41,8 +45,18 @@ class Tile(
 
             centerOn(other = this@Tile)
         }
+        
+        // 3. Selection Border (On Top)
+        selectionView = roundRect(
+            size = Size(WIDTH, HEIGHT),
+            radius = RectCorners(8.0),
+            fill = Colors.TRANSPARENT,
+            stroke = Colors.YELLOW,
+            strokeThickness = 6.0
+        ).also { it.visible = false }
+    }
 
-        // Optional: Display ID for debugging
-        // text("$id", color = Colors.BLACK).alignTopLeft(this@Tile)
+    fun setSelect(selected: Boolean) {
+        selectionView.visible = selected
     }
 }
