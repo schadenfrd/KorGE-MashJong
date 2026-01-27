@@ -8,7 +8,15 @@ class TileFactory {
     private val tileSlices = mutableMapOf<Int, BmpSlice>()
     private val tileDefinitions = mutableMapOf<Int, TileInfo>()
 
-    // Load the atlas with specific classic Mahjong layout
+    /**
+     * Load the atlas with classic Mahjong layout
+     *
+     * tileSize = 41x53px
+     * horizontalSpacing = 3px
+     * verticalSpacing = 8px
+     * dragonsXWindsSpacing = 17px
+     * seasonsXFlowersSpacing = 47px
+     */
     fun loadAtlas(
         atlas: Bitmap,
         startX: Int = 0,
@@ -113,6 +121,7 @@ class TileFactory {
     fun createTile(id: Int): Tile {
         val slice = tileSlices[id]
             ?: throw IllegalStateException("Tile ID $id not found or atlas not loaded")
+
         return Tile(id, slice)
     }
 

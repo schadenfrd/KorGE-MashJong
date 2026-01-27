@@ -6,16 +6,14 @@ object LevelGenerator {
     
     fun generateTurtleLayout(deck: List<Pair<TileInfo, BmpSlice>>): List<TilePosition> {
         val positions = getTurtlePositions()
-        
         // Ensure we don't overflow or underflow
         val tileCount = minOf(deck.size, positions.size)
-        
         val result = mutableListOf<TilePosition>()
         
         for (i in 0 until tileCount) {
             val (layer, x, y) = positions[i]
-            
             val tileInfo = deck[i].first
+
             result.add(TilePosition(layer, x, y, tileInfo.id))
         }
         
