@@ -13,7 +13,7 @@ class TileTest {
         val dummySlice = dummyBitmap.sliceWithSize(0, 0, 10, 10)
         val tile = Tile(1, dummySlice)
         
-        // Tile should have background (roundRect) and face (image)
-        assertEquals(2, tile.numChildren)
+        // Tile should have background (roundRect), face (image), and selectionView
+        assertEquals(3, tile.numChildren)
     }
 }

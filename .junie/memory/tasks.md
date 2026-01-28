@@ -268,3 +268,23 @@
     "NEW INSTRUCTION": "WHEN initialize needs stage or views THEN add scene to stage before initialize"
 }
 
+[2026-01-28 14:33] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "share concrete model objects across layers",
+    "MISSING STEPS": "define lifecycle order, introduce orchestrator early, add interface-based callbacks, add smoke run",
+    "BOTTLENECK": "Initialization order coupled to stage/views caused uninitialized lateinit access.",
+    "PROJECT NOTE": "Korge containers need to be attached to the stage for views/sizing; alignment depends on non-zero container size.",
+    "NEW INSTRUCTION": "WHEN a view needs stage or views THEN add it to stage before initialize"
+}
+
+[2026-01-28 14:44] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "initialize scene before attach",
+    "MISSING STEPS": "verify lifecycle order, run build, smoke test in app, add minimal tests",
+    "BOTTLENECK": "Initialization order relied on stage context before attachment.",
+    "PROJECT NOTE": "In KorGE, Container.stage is null until the view is added to the hierarchy.",
+    "NEW INSTRUCTION": "WHEN a scene needs stage-dependent initialization THEN add it to stage before initialize"
+}
+

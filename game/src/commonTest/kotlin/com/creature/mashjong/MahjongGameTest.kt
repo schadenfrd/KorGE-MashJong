@@ -34,7 +34,7 @@ class MahjongGameTest {
         // Cover tile at (1, 0, 0) -> Overlap
         val t1 = TilePosition(0, 0, 0, 0)
         val t2 = TilePosition(1, 0, 0, 1)
-        val game = MahjongGame(listOf(t1, t2), TurtleLayoutStrategy(), testProvider)
+        val game = MahjongGame(listOf(t1, t2), testProvider)
         
         assertFalse(game.isTileFree(t1), "Tile covered by layer above should be blocked")
         assertTrue(game.isTileFree(t2), "Top tile should be free")
@@ -50,15 +50,15 @@ class MahjongGameTest {
         val right = TilePosition(0, 4, 0, 2)
         
         // Case 1: Blocked by both
-        val gameFull = MahjongGame(listOf(t1, left, right), TurtleLayoutStrategy(), testProvider)
+        val gameFull = MahjongGame(listOf(t1, left, right), testProvider)
         assertFalse(gameFull.isTileFree(t1), "Blocked by both sides")
         
         // Case 2: Left only
-        val gameLeft = MahjongGame(listOf(t1, left), TurtleLayoutStrategy(), testProvider)
+        val gameLeft = MahjongGame(listOf(t1, left), testProvider)
         assertTrue(gameLeft.isTileFree(t1), "Free if only left blocked")
         
         // Case 3: Right only
-        val gameRight = MahjongGame(listOf(t1, right), TurtleLayoutStrategy(), testProvider)
+        val gameRight = MahjongGame(listOf(t1, right), testProvider)
         assertTrue(gameRight.isTileFree(t1), "Free if only right blocked")
     }
 
@@ -67,7 +67,7 @@ class MahjongGameTest {
         val t1 = TilePosition(0,0,0, 0) // Bamboo 1
         val t2 = TilePosition(0,2,0, 1) // Bamboo 1
         val t3 = TilePosition(0,4,0, 2) // Bamboo 2
-        val game = MahjongGame(listOf(t1, t2, t3), TurtleLayoutStrategy(), testProvider)
+        val game = MahjongGame(listOf(t1, t2, t3), testProvider)
         
         assertTrue(game.isMatch(t1, t2))
         assertFalse(game.isMatch(t1, t3))
@@ -80,7 +80,7 @@ class MahjongGameTest {
         val s1 = TilePosition(0,4,0, 200)
         val s2 = TilePosition(0,6,0, 201)
         
-        val game = MahjongGame(listOf(f1, f2, s1, s2), TurtleLayoutStrategy(), testProvider)
+        val game = MahjongGame(listOf(f1, f2, s1, s2), testProvider)
         
         assertTrue(game.isMatch(f1, f2), "Flowers should match")
         assertTrue(game.isMatch(s1, s2), "Seasons should match")
@@ -94,7 +94,7 @@ class MahjongGameTest {
         val t2 = TilePosition(0,0,4, 1) // Match
         val t3 = TilePosition(0,0,8, 2) // No match
         
-        val game = MahjongGame(listOf(t1, t2, t3), TurtleLayoutStrategy(), testProvider)
+        val game = MahjongGame(listOf(t1, t2, t3), testProvider)
         
         // 1. Select first
         val r1 = game.onTileClick(t1)
@@ -132,8 +132,8 @@ class MahjongGameTest {
             TileInfo(i, TileSuit.BAMBOO, 1) to fakeSlice
         }
         
-        val level = LevelGenerator.generateTurtleLayout(deck)
-        val game = MahjongGame(level, TurtleLayoutStrategy(), testProvider)
+        val level = LevelGenerator.generateLayout(deck, TurtleLayoutStrategy())
+        val game = MahjongGame(level, testProvider)
         
         // Find a tile on Layer 1 that is in the middle of the block
         // Based on analysis: L1 has x=1,3,5,7,9,11 and y=9,11,13,15,17,19
@@ -163,7 +163,7 @@ class MahjongGameTest {
         val t3 = TilePosition(0,0,8, 2) // No match for t1/t2
         val t4 = TilePosition(0,0,12, 3) // No match
 
-        val game = MahjongGame(listOf(t1, t2, t3, t4), TurtleLayoutStrategy(), testProvider)
+        val game = MahjongGame(listOf(t1, t2, t3, t4), testProvider)
 
         // 1. Check Hints
         assertEquals(3, game.hintsRemaining)
@@ -185,10 +185,10 @@ class MahjongGameTest {
         assertEquals(2, game.undosRemaining)
         
         // 3. Check No Moves
-        val gameNoMoves = MahjongGame(listOf(t3, t4), TurtleLayoutStrategy(), testProvider)
+        val gameNoMoves = MahjongGame(listOf(t3, t4), testProvider)
         assertFalse(gameNoMoves.hasValidMoves())
         
-        val gameWithMoves = MahjongGame(listOf(t1, t2), TurtleLayoutStrategy(), testProvider)
+        val gameWithMoves = MahjongGame(listOf(t1, t2), testProvider)
         assertTrue(gameWithMoves.hasValidMoves())
     }
 }

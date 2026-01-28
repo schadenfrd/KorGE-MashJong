@@ -1,6 +1,6 @@
 package com.creature.mashjong
 
-import com.creature.mashjong.layout.LayoutStrategy
+import kotlin.math.abs
 
 sealed class MatchResult {
     data object Ignored : MatchResult()
@@ -12,7 +12,6 @@ sealed class MatchResult {
 
 class MahjongGame(
     initialTiles: List<TilePosition>,
-    private val layoutStrategy: LayoutStrategy,
     private val tileInfoProvider: (Int) -> TileInfo?
 ) {
     private val tiles = initialTiles.toMutableList()
@@ -24,7 +23,7 @@ class MahjongGame(
         private set
     var hintsRemaining = maxHints
         private set
-    private val history = mutableListOf<Pair<TilePosition, TilePosition>>()
+    private val commandHistory = mutableListOf<Command>()
 
     var selectedTile: TilePosition? = null
         private set
@@ -32,16 +31,27 @@ class MahjongGame(
     fun getActiveTiles(): List<TilePosition> = tiles.toList()
 
     fun undo(): List<TilePosition> {
-        if (undosRemaining <= 0 || history.isEmpty()) return emptyList()
+        if (undosRemaining <= 0 || commandHistory.isEmpty()) return emptyList()
 
-        val lastMove = history.removeAt(history.lastIndex)
-        tiles.add(lastMove.first)
-        tiles.add(lastMove.second)
+        val command = commandHistory.removeAt(commandHistory.lastIndex)
+        command.undo()
 
         undosRemaining--
         selectedTile = null
 
-        return listOf(lastMove.first, lastMove.second)
+        return if (command is MatchCommand) {
+            listOf(command.tileA, command.tileB)
+        } else {
+            emptyList()
+        }
+    }
+
+    internal fun removeTile(tile: TilePosition) {
+        tiles.remove(tile)
+    }
+
+    internal fun addTile(tile: TilePosition) {
+        tiles.add(tile)
     }
 
     fun getHint(): Pair<TilePosition, TilePosition>? {
@@ -79,7 +89,7 @@ class MahjongGame(
     }
 
     fun isTileFree(tile: TilePosition): Boolean =
-        !layoutStrategy.isTileBlocked(tile = tile, activeTiles = tiles)
+        !isTileBlocked(tile)
 
     fun isMatch(tileA: TilePosition, tileB: TilePosition): Boolean {
         // If exact same instance (should be handled by caller usually, but logic here: same tile is not a match with itself)
@@ -123,9 +133,10 @@ class MahjongGame(
 
             if (isMatch(tileA = currentSelection, tileB = tile)) {
                 // Valid Match
-                tiles.remove(currentSelection)
-                tiles.remove(tile)
-                history.add(currentSelection to tile)
+                val command = MatchCommand(this, currentSelection, tile)
+                command.execute()
+                commandHistory.add(command)
+
                 selectedTile = null
 
                 return MatchResult.Match(tileA = currentSelection, tileB = tile)
@@ -137,4 +148,28 @@ class MahjongGame(
             }
         }
     }
+
+    private fun isTileBlocked(tile: TilePosition): Boolean {
+        val covered = tiles.any { other ->
+            other.layer == tile.layer + 1 &&
+                    abs(other.x - tile.x) < 2 &&
+                    abs(other.y - tile.y) < 2
+        }
+        if (covered) return true
+
+        val hasLeft = tiles.any { other ->
+            other.layer == tile.layer &&
+                    other.x == tile.x - 2 &&
+                    abs(other.y - tile.y) < 2
+        }
+
+        val hasRight = tiles.any { other ->
+            other.layer == tile.layer &&
+                    other.x == tile.x + 2 &&
+                    abs(other.y - tile.y) < 2
+        }
+
+        return hasLeft && hasRight
+    }
 }
+

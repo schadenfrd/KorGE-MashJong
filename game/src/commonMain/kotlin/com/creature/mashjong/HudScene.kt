@@ -4,6 +4,7 @@ import korlibs.image.color.Colors
 import korlibs.korge.input.onClick
 import korlibs.korge.ui.uiButton
 import korlibs.korge.view.Container
+import korlibs.korge.view.addUpdater
 import korlibs.korge.view.align.alignBottomToBottomOf
 import korlibs.korge.view.align.alignRightToLeftOf
 import korlibs.korge.view.align.alignRightToRightOf
@@ -16,7 +17,7 @@ import korlibs.korge.view.text
 import korlibs.math.geom.Size
 
 class HudScene(
-    val game: MahjongGame,
+    val viewModel: GameViewModel,
     val onUndo: () -> Unit,
     val onHint: () -> Unit,
     val onClose: () -> Unit
@@ -50,24 +51,30 @@ class HudScene(
 
         // Hint Button (Bottom Right)
         val hintBtn =
-            uiButton(label = "Hint (${game.hintsRemaining})", size = Size(btnWidth, btnHeight)) {
+            uiButton(label = "Hint", size = Size(btnWidth, btnHeight)) {
                 textSize = 30.0 * uiScale
                 alignRightToRightOf(this@HudScene, padding = padding)
                 alignBottomToBottomOf(this@HudScene, padding = padding)
                 onClick {
                     onHint()
-                    text = "Hint (${game.hintsRemaining})"
+                }
+                addUpdater {
+                    text = "Hint (${viewModel.hintsRemaining.value})"
+                    enabled = viewModel.hintsRemaining.value > 0
                 }
             }
 
         // Undo Button (Left of Hint)
-        uiButton(label = "Undo (${game.undosRemaining})", size = Size(btnWidth, btnHeight)) {
+        uiButton(label = "Undo", size = Size(btnWidth, btnHeight)) {
             textSize = 30.0 * uiScale
             alignRightToLeftOf(hintBtn, padding = 20)
             alignBottomToBottomOf(this@HudScene, padding = padding)
             onClick {
                 onUndo()
-                text = "Undo (${game.undosRemaining})"
+            }
+            addUpdater {
+                text = "Undo (${viewModel.undosRemaining.value})"
+                enabled = viewModel.undosRemaining.value > 0
             }
         }
     }

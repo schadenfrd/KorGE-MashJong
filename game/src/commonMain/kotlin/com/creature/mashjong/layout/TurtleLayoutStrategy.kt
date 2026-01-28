@@ -1,7 +1,5 @@
 package com.creature.mashjong.layout
 
-import com.creature.mashjong.TilePosition
-import kotlin.math.abs
 
 class TurtleLayoutStrategy : LayoutStrategy {
 
@@ -47,38 +45,5 @@ class TurtleLayoutStrategy : LayoutStrategy {
         list.add(LayoutSlot(4, 6, 14))
 
         return list
-    }
-
-    override fun isTileBlocked(tile: TilePosition, activeTiles: Collection<TilePosition>): Boolean {
-        // 1. Check Top Cover (Layer + 1)
-        // A tile is covered if any tile on the layer above overlaps it.
-        // Coordinate system: Grid steps of 2. Tile size ~2x2.
-        // Overlap condition: abs(x1 - x2) < 2 && abs(y1 - y2) < 2
-        val covered = activeTiles.any { other ->
-            other.layer == tile.layer + 1 &&
-            abs(other.x - tile.x) < 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        if (covered) return true
-        
-        // 2. Check Sides (Left/Right) at same layer
-        // A tile is blocked if it has neighbors on BOTH Left and Right.
-        // Left Neighbor: x = tile.x - 2, overlapping Y
-        // Right Neighbor: x = tile.x + 2, overlapping Y
-        
-        val hasLeft = activeTiles.any { other ->
-            other.layer == tile.layer &&
-            other.x == tile.x - 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        
-        val hasRight = activeTiles.any { other ->
-            other.layer == tile.layer &&
-            other.x == tile.x + 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        
-        // Blocked if it has BOTH (Left AND Right)
-        return hasLeft && hasRight
     }
 }

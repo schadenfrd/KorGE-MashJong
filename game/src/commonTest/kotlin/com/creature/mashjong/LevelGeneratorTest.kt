@@ -1,5 +1,6 @@
 package com.creature.mashjong
 
+import com.creature.mashjong.layout.TurtleLayoutStrategy
 import korlibs.image.bitmap.Bitmap32
 import korlibs.image.bitmap.slice
 import kotlin.test.Test
@@ -16,7 +17,7 @@ class LevelGeneratorTest {
         val deck = List(144) { dummyInfo to dummySlice }
 
         // Generate Layout
-        val positions = LevelGenerator.generateTurtleLayout(deck)
+        val positions = LevelGenerator.generateLayout(deck, TurtleLayoutStrategy())
 
         // Verify count
         assertEquals(144, positions.size, "Should generate exactly 144 tile positions")

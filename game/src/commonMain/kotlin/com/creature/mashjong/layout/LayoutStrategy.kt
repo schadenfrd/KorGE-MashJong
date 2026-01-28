@@ -1,7 +1,5 @@
 package com.creature.mashjong.layout
 
-import com.creature.mashjong.TilePosition
-
 interface LayoutStrategy {
     /**
      * Returns a list of available slots (Layer, X, Y) for this layout.
@@ -12,7 +10,6 @@ interface LayoutStrategy {
     /**
      * Checks if a specific tile is blocked by other active tiles.
      */
-    fun isTileBlocked(tile: TilePosition, activeTiles: Collection<TilePosition>): Boolean
 }
 
 data class LayoutSlot(val layer: Int, val x: Int, val y: Int)

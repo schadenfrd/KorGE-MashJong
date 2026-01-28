@@ -6,10 +6,11 @@ import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.view.Container
 
 class GameOrchestrator(val onClose: () -> Unit) : Container() {
-    lateinit var game: MahjongGame
-    lateinit var boardView: BoardView
-    lateinit var gameScene: GameScene
-    lateinit var hudScene: HudScene
+    private lateinit var viewModel: GameViewModel
+    private lateinit var boardView: BoardView
+    private lateinit var gameScene: GameScene
+    private lateinit var hudScene: HudScene
+    private var isGameOver = false
 
     suspend fun start() {
         // 1. Load Assets & Create Game
@@ -18,13 +19,14 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
         tileFactory.loadAtlas(atlas = atlas)
 
         val deck = tileFactory.createDeck()
-        val levelData = LevelGenerator.generateTurtleLayout(deck)
+        val strategy = TurtleLayoutStrategy()
+        val levelData = LevelGenerator.generateLayout(deck, strategy)
 
-        game = MahjongGame(
+        val game = MahjongGame(
             initialTiles = levelData,
-            layoutStrategy = TurtleLayoutStrategy(),
             tileInfoProvider = tileFactory::getTileInfo
         )
+        viewModel = GameViewModel(game)
 
         // 2. Create Views
         // We pass a callback to the board view for tile clicks
@@ -38,7 +40,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
 
         // 3. Create HUD with Callbacks
         hudScene = HudScene(
-            game = game,
+            viewModel = viewModel,
             onUndo = ::handleUndo,
             onHint = ::handleHint,
             onClose = onClose
@@ -60,7 +62,9 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     }
 
     private fun handleTileClick(pos: TilePosition) {
-        when (val result = game.onTileClick(pos)) {
+        if (isGameOver) return
+
+        when (val result = viewModel.onTileClick(pos)) {
             MatchResult.Ignored -> Unit
             MatchResult.Blocked -> println("Blocked: $pos")
             MatchResult.Deselected -> boardView.setSelection(null)
@@ -74,24 +78,26 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     }
 
     private fun handleUndo() {
-        val restored = game.undo()
+        if (isGameOver) return
+        val restored = viewModel.onUndo()
         if (restored.isNotEmpty()) {
             boardView.addTiles(restored)
         }
     }
 
     private fun handleHint() {
-        val hint = game.getHint()
+        if (isGameOver) return
+        val hint = viewModel.onHint()
         if (hint != null) {
             boardView.setSelection(hint.first)
         }
     }
 
     private fun checkGameOver() {
-        if (game.getActiveTiles().isEmpty()) {
-            hudScene.showGameOver(victory = true)
-        } else if (!game.hasValidMoves()) {
-            hudScene.showGameOver(victory = false)
+        val state = viewModel.gameState.value
+        if (state != GameState.PLAYING) {
+            isGameOver = true
+            hudScene.showGameOver(victory = state == GameState.WON)
         }
     }
 }
