@@ -47,10 +47,13 @@ suspend fun createGameWindow(
 }
 
 suspend fun Stage.startMashjong(onClose: () -> Unit) {
-    val scene = GameScene(onClose = onClose)
-
     removeChildren()
-    addChild(view = scene)
 
-    scene.initialize()
+    // Use the Orchestrator to manage the game session
+    val orchestrator = GameOrchestrator(onClose = onClose)
+
+    // Add to stage BEFORE calling start, so it has access to stage/views
+    addChild(view = orchestrator)
+
+    orchestrator.start()
 }

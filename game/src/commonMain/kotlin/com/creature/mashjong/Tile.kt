@@ -24,16 +24,16 @@ class Tile(
         const val FACE_WIDTH = WIDTH - PADDING
         const val FACE_HEIGHT = HEIGHT - PADDING
     }
-    
+
     private var selectionView: RoundRect
 
     init {
         // 1. Drop Shadow (for depth)
         roundRect(
             size = Size(WIDTH, HEIGHT),
-            radius = RectCorners(8.0),
-            fill = Colors.BLACK.withAd(0.5),
-        ).xy(4.0, 4.0)
+            radius = RectCorners(corner = 8.0),
+            fill = Colors.BLACK.withAd(v = 0.5),
+        ).xy(x = 4.0, y = 4.0)
 
         // 2. Draw the face image centered on the tile
         image(texture = face).apply {
@@ -41,15 +41,15 @@ class Tile(
             val scaleX = FACE_WIDTH / width
             val scaleY = FACE_HEIGHT / height
             val s = if (scaleX < scaleY) scaleX else scaleY
-            scale(s)
+            scale(sx = s)
 
             centerOn(other = this@Tile)
         }
-        
+
         // 3. Selection Border (On Top)
         selectionView = roundRect(
             size = Size(WIDTH, HEIGHT),
-            radius = RectCorners(8.0),
+            radius = RectCorners(corner = 8.0),
             fill = Colors.TRANSPARENT,
             stroke = Colors.HOTPINK,
             strokeThickness = 8.0

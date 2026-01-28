@@ -198,3 +198,27 @@
     "NEW INSTRUCTION": "WHEN HUD appears squashed top-left THEN add stage-sized red and blue debug backgrounds"
 }
 
+[2026-01-28 13:26] - Updated by Junie
+{
+    "TYPE": "positive",
+    "CATEGORY": "Plan approved",
+    "EXPECTATION": "They confirmed the HUD decoupling and transparent rect sizing plan is good and want it implemented now.",
+    "NEW INSTRUCTION": "WHEN user approves the plan and asks to implement THEN provide code changes and integration steps"
+}
+
+[2026-01-28 13:49] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "Init sequencing + decoupling",
+    "EXPECTATION": "They want to avoid lateinit crashes by ensuring GameScene finishes initialization only after it’s attached to a stage, and to remove the GameScene↔HUD circular dependency using an orchestrator/bridge.",
+    "NEW INSTRUCTION": "WHEN constructing HUD from GameScene state THEN ensure GameScene initialized and stage attached first"
+}
+
+[2026-01-28 13:53] - Updated by Junie
+{
+    "TYPE": "positive",
+    "CATEGORY": "Plan approved",
+    "EXPECTATION": "They approved the HUD decoupling approach and want it implemented now with concrete code changes.",
+    "NEW INSTRUCTION": "WHEN user approves a proposed plan THEN implement it with code and integration steps"
+}
+

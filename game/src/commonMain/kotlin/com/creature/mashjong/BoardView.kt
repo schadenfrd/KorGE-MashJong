@@ -27,12 +27,12 @@ class BoardView(
         // CRITICAL: Sort tiles so bottom layers are drawn first!
         // Sort by Layer (ascending), then Y (ascending), then X (ascending)
         val sortedTiles = tiles.sortedWith(
-            compareBy<TilePosition> { it.layer }
+            comparator = compareBy<TilePosition> { it.layer }
                 .thenBy { it.y }
                 .thenBy { it.x }
         )
 
-        addTiles(sortedTiles)
+        addTiles(tilesToAdd = sortedTiles)
     }
 
     fun addTiles(tilesToAdd: List<TilePosition>) {
@@ -49,7 +49,7 @@ class BoardView(
             drawX += pos.layer * layerOffset.x
             drawY += pos.layer * layerOffset.y
 
-            tile.xy(drawX, drawY)
+            tile.xy(x = drawX, y = drawY)
 
             // Store the logical position in the view for gameplay logic later (clicking)
             tile.name = "Tile_${pos.layer}_${pos.x}_${pos.y}"

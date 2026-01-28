@@ -238,3 +238,33 @@
     "NEW INSTRUCTION": "WHEN UI overlaps tiles or misaligned across resolutions THEN compute stage safe area, anchor HUD to edges, scale board to fit"
 }
 
+[2026-01-28 13:19] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "scan project",
+    "MISSING STEPS": "ask clarifying questions",
+    "BOTTLENECK": "Relied on assumptions without confirming viewport/container setup.",
+    "PROJECT NOTE": "In Korge, Containers default to 0x0; set size to stage or add a transparent rect.",
+    "NEW INSTRUCTION": "WHEN task requests explanation without code changes THEN avoid project tools and answer directly"
+}
+
+[2026-01-28 13:29] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "keep HUD in GameScene",
+    "MISSING STEPS": "refactor GameScene,expose dependencies,move game-over handling,compose scenes in startMashjong,remove debug overlays,build check",
+    "BOTTLENECK": "Created HudScene but did not wire it or refactor GameScene.",
+    "PROJECT NOTE": "Use Colors.BLACK.withAd(0.0) instead of TRANSPARENT_BLACK; remove solidRect debug overlays.",
+    "NEW INSTRUCTION": "WHEN creating overlay scene for HUD THEN refactor GameScene to expose game/boardView and remove HUD"
+}
+
+[2026-01-28 13:50] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "initialize scenes before attach",
+    "MISSING STEPS": "attach scenes,guard initialize,create orchestrator,invert dependencies",
+    "BOTTLENECK": "Stage-dependent initialization ran before the scene was attached.",
+    "PROJECT NOTE": "In Korge, Container.stage is null until added; avoid stage?.views in initialize before addChild.",
+    "NEW INSTRUCTION": "WHEN initialize needs stage or views THEN add scene to stage before initialize"
+}
+

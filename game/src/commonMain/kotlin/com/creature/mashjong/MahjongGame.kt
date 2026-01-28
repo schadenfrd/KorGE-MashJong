@@ -54,18 +54,21 @@ class MahjongGame(
             for (j in i + 1 until freeTiles.size) {
                 val t1 = freeTiles[i]
                 val t2 = freeTiles[j]
+
                 if (isMatch(t1, t2)) {
                     hintsRemaining--
+
                     return t1 to t2
                 }
             }
         }
+
         return null
     }
 
     fun hasValidMoves(): Boolean {
         val active = getActiveTiles()
-        val freeTiles = active.filter { isTileFree(it) }
+        val freeTiles = active.filter(predicate = ::isTileFree)
 
         for (i in freeTiles.indices) {
             for (j in i + 1 until freeTiles.size) {
@@ -75,9 +78,8 @@ class MahjongGame(
         return false
     }
 
-    fun isTileFree(tile: TilePosition): Boolean {
-        return !layoutStrategy.isTileBlocked(tile, tiles)
-    }
+    fun isTileFree(tile: TilePosition): Boolean =
+        !layoutStrategy.isTileBlocked(tile = tile, activeTiles = tiles)
 
     fun isMatch(tileA: TilePosition, tileB: TilePosition): Boolean {
         // If exact same instance (should be handled by caller usually, but logic here: same tile is not a match with itself)
@@ -88,7 +90,6 @@ class MahjongGame(
 
         // 1. Suits must match (except special cases logic below handles suit grouping)
         // Actually, Flowers and Seasons have their own suits.
-
         if (infoA.suit != infoB.suit) return false
 
         // 2. Value logic
@@ -110,22 +111,24 @@ class MahjongGame(
 
         if (currentSelection == null) {
             selectedTile = tile
+
             return MatchResult.Selected(tile)
         } else {
             if (currentSelection == tile) {
                 // Clicking the selected tile again -> Deselect
                 selectedTile = null
+
                 return MatchResult.Deselected
             }
 
-            if (isMatch(currentSelection, tile)) {
+            if (isMatch(tileA = currentSelection, tileB = tile)) {
                 // Valid Match
                 tiles.remove(currentSelection)
                 tiles.remove(tile)
                 history.add(currentSelection to tile)
                 selectedTile = null
 
-                return MatchResult.Match(currentSelection, tile)
+                return MatchResult.Match(tileA = currentSelection, tileB = tile)
             } else {
                 // Not a match -> Select the new tile
                 selectedTile = tile

@@ -148,3 +148,23 @@
     "NEW INSTRUCTION": "WHEN build logs mention tvosSimulatorArm64Test device unsupported THEN disable tvOS simulator test task in :game build"
 }
 
+[2026-01-28 13:28] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "create",
+    "ERROR": "Unresolved reference TRANSPARENT_BLACK",
+    "ROOT CAUSE": "The korlibs Colors API in this project lacks TRANSPARENT_BLACK constant.",
+    "PROJECT NOTE": "Use Colors.BLACK.withAd(0.0) for a fully transparent color in Korge.",
+    "NEW INSTRUCTION": "WHEN code uses Colors.TRANSPARENT_BLACK THEN replace with Colors.BLACK.withAd(0.0)"
+}
+
+[2026-01-28 13:49] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "GameScene.initialize",
+    "ERROR": "lateinit property game not initialized",
+    "ROOT CAUSE": "initialize returned early because the scene was not added to the Stage, leaving lateinit fields unset.",
+    "PROJECT NOTE": "In main.kt Stage.startMashjong, addChild(gameScene) before calling gameScene.initialize(); current order (lines 53–66) initializes before attaching, so stage?.views is null and initialize exits.",
+    "NEW INSTRUCTION": "WHEN initializing a Container that accesses stage?.views THEN add it to Stage before calling initialize"
+}
+
