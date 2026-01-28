@@ -1,10 +1,7 @@
 package com.creature.mashjong
 
 import com.creature.mashjong.domain.logic.MahjongGame
-import com.creature.mashjong.domain.model.MatchResult
-import com.creature.mashjong.domain.model.TileInfo
-import com.creature.mashjong.domain.model.TilePosition
-import com.creature.mashjong.domain.model.TileSuit
+import com.creature.mashjong.domain.model.*
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -12,7 +9,7 @@ import kotlin.test.assertIs
 class TileSelectionTest {
 
     private val testProvider: (Int) -> TileInfo? = { id ->
-        TileInfo(id, TileSuit.BAMBOO, 1)
+        TileInfo(id, Suited(StandardSuit.BAMBOO, 1))
     }
 
     @Test
@@ -70,7 +67,7 @@ class TileSelectionTest {
 
         // Let's make T3 different.
         val providerWithMismatch: (Int) -> TileInfo? = { id ->
-            if (id == 3) TileInfo(id, TileSuit.DOTS, 1) else TileInfo(id, TileSuit.BAMBOO, 1)
+            if (id == 3) TileInfo(id, Suited(StandardSuit.DOTS, 1)) else TileInfo(id, Suited(StandardSuit.BAMBOO, 1))
         }
         val gameMismatch = MahjongGame(listOf(t1, t2, t3), providerWithMismatch)
 

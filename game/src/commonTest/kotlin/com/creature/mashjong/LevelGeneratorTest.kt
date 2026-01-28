@@ -1,8 +1,9 @@
 package com.creature.mashjong
 
 import com.creature.mashjong.data.LevelGenerator
+import com.creature.mashjong.domain.model.StandardSuit
+import com.creature.mashjong.domain.model.Suited
 import com.creature.mashjong.domain.model.TileInfo
-import com.creature.mashjong.domain.model.TileSuit
 import com.creature.mashjong.layout.TurtleLayoutStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -12,7 +13,7 @@ class LevelGeneratorTest {
     @Test
     fun testTurtleLayoutGeneration() {
         // Prepare a dummy deck of 144 tiles
-        val dummyInfo = TileInfo(0, TileSuit.DOTS, 1, "test")
+        val dummyInfo = TileInfo(0, Suited(StandardSuit.DOTS, 1))
         val deck = List(144) { dummyInfo }
 
         // Generate Layout

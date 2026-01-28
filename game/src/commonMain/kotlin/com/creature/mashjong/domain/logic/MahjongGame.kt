@@ -3,14 +3,14 @@ package com.creature.mashjong.domain.logic
 import com.creature.mashjong.domain.model.MatchResult
 import com.creature.mashjong.domain.model.TileInfo
 import com.creature.mashjong.domain.model.TilePosition
-import com.creature.mashjong.domain.model.TileSuit
 import kotlin.math.abs
 
 class MahjongGame(
     initialTiles: List<TilePosition>,
     private val tileInfoProvider: (Int) -> TileInfo?,
     val maxUndos: Int = 3,
-    val maxHints: Int = 3
+    val maxHints: Int = 3,
+    private val ruleSet: RuleSet = SolitaireMatchRule
 ) {
     private val tiles = initialTiles.toMutableList()
 
@@ -94,16 +94,7 @@ class MahjongGame(
         val infoA = tileInfoProvider(tileA.tileId) ?: return false
         val infoB = tileInfoProvider(tileB.tileId) ?: return false
 
-        // 1. Suits must match (except special cases logic below handles suit grouping)
-        // Actually, Flowers and Seasons have their own suits.
-        if (infoA.suit != infoB.suit) return false
-
-        // 2. Value logic
-        return when (infoA.suit) {
-            TileSuit.FLOWERS -> true // Any Flower matches any Flower
-            TileSuit.SEASONS -> true // Any Season matches any Season
-            else -> infoA.value == infoB.value // Standard: Value must match (e.g. 5 Bamboo == 5 Bamboo)
-        }
+        return ruleSet.isMatch(infoA.definition, infoB.definition)
     }
 
     fun onTileClick(tile: TilePosition): MatchResult {

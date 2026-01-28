@@ -1,7 +1,13 @@
 package com.creature.mashjong.presentation.infrastructure
 
+import com.creature.mashjong.domain.model.Dragon
+import com.creature.mashjong.domain.model.Flower
+import com.creature.mashjong.domain.model.Season
+import com.creature.mashjong.domain.model.StandardSuit
+import com.creature.mashjong.domain.model.Suited
+import com.creature.mashjong.domain.model.TileDefinition
 import com.creature.mashjong.domain.model.TileInfo
-import com.creature.mashjong.domain.model.TileSuit
+import com.creature.mashjong.domain.model.Wind
 import com.creature.mashjong.presentation.view.Tile
 import korlibs.image.bitmap.Bitmap
 import korlibs.image.bitmap.BmpSlice
@@ -54,70 +60,75 @@ class TileFactory {
             return list
         }
 
-        // Row 0: Bamboo 1-9 (IDs 0-8)
-        val bambooSlices = sliceRow(0, 9)
+        var idCounter = 0
+
+        // Row 0: Bamboo 1-9
+        val bambooSlices = sliceRow(rowIndex = 0, count = 9)
         for (i in 0..8) {
-            val id = i
-            defineTile(id, TileSuit.BAMBOO, i + 1, "${i + 1} of Bamboo", bambooSlices[i])
+            val def = Suited(suit = StandardSuit.BAMBOO, number = i + 1)
+
+            defineTile(id = idCounter++, definition = def, slice = bambooSlices[i])
         }
 
-        // Row 1: Dots 1-9 (IDs 9-17)
-        val dotsSlices = sliceRow(1, 9)
+        // Row 1: Dots 1-9
+        val dotsSlices = sliceRow(rowIndex = 1, count = 9)
         for (i in 0..8) {
-            val id = i + 9
-            defineTile(id, TileSuit.DOTS, i + 1, "${i + 1} of Dots", dotsSlices[i])
+            val def = Suited(suit = StandardSuit.DOTS, number = i + 1)
+
+            defineTile(id = idCounter++, definition = def, slice = dotsSlices[i])
         }
 
-        // Row 2: Characters 1-9 (IDs 18-26)
-        val charSlices = sliceRow(2, 9)
+        // Row 2: Characters 1-9
+        val charSlices = sliceRow(rowIndex = 2, count = 9)
         for (i in 0..8) {
-            val id = i + 18
-            defineTile(id, TileSuit.CHARACTERS, i + 1, "${i + 1} of Characters", charSlices[i])
+            val def = Suited(suit = StandardSuit.CHARACTERS, number = i + 1)
+
+            defineTile(id = idCounter++, definition = def, slice = charSlices[i])
         }
 
         // Row 3: Dragons (3) -> Gap 17 -> Winds (4)
-        // Dragons (IDs 31-33): Red, Green, White
-        val dragonSlices = sliceRow(3, 3, startOffset = 0)
-        val dragons = listOf("Red Dragon", "Green Dragon", "White Dragon")
-        for (i in dragons.indices) {
-            defineTile(31 + i, TileSuit.HONORS, i + 4, dragons[i], dragonSlices[i])
+        val dragonSlices = sliceRow(rowIndex = 3, count = 3)
+        Dragon.entries.forEachIndexed { index, dragon ->
+            defineTile(id = idCounter++, definition = dragon, slice = dragonSlices[index])
         }
 
-        // Winds (IDs 27-30): East, South, West, North
-        // Offset: Dragons Width (3*41 + 2*3 = 129) + Gap 17 = 146
-        val windSlices = sliceRow(3, 4, startOffset = 146)
-        val winds = listOf("East", "South", "West", "North")
-        for (i in winds.indices) {
-            defineTile(27 + i, TileSuit.HONORS, i, winds[i], windSlices[i])
+        // Winds
+        val windSlices = sliceRow(rowIndex = 3, count = 4, startOffset = 146)
+        Wind.entries.forEachIndexed { index, wind ->
+            defineTile(id = idCounter++, definition = wind, slice = windSlices[index])
         }
 
         // Row 4: Seasons (4) -> Gap 47 -> Flowers (4)
-        // Seasons (IDs 38-41): Spring, Summer, Autumn, Winter
-        val seasonSlices = sliceRow(4, 4, startOffset = 0)
-        val seasons = listOf("Spring", "Summer", "Autumn", "Winter")
-        for (i in seasons.indices) {
-            defineTile(38 + i, TileSuit.SEASONS, i + 1, seasons[i], seasonSlices[i], quantity = 1)
+        val seasonSlices = sliceRow(rowIndex = 4, count = 4)
+        Season.entries.forEachIndexed { index, season ->
+            defineTile(
+                id = idCounter++,
+                definition = season,
+                slice = seasonSlices[index],
+                quantity = 1
+            )
         }
 
-        // Flowers (IDs 34-37): Plum, Orchid, Chrysanthemum, Bamboo
-        // Offset: Seasons Width (4*41 + 3*3 = 173) + Gap 47 = 220
-        val flowerSlices = sliceRow(4, 4, startOffset = 220)
-        val flowers = listOf("Plum", "Orchid", "Chrysanthemum", "Bamboo")
-        for (i in flowers.indices) {
-            defineTile(34 + i, TileSuit.FLOWERS, i + 1, flowers[i], flowerSlices[i], quantity = 1)
+        // Flowers
+        val flowerSlices = sliceRow(rowIndex = 4, count = 4, startOffset = 220)
+        Flower.entries.forEachIndexed { index, flower ->
+            defineTile(
+                id = idCounter++,
+                definition = flower,
+                slice = flowerSlices[index],
+                quantity = 1
+            )
         }
     }
 
     private fun defineTile(
         id: Int,
-        suit: TileSuit,
-        value: Int,
-        name: String,
+        definition: TileDefinition,
         slice: BmpSlice,
         quantity: Int = 4
     ) {
         tileSlices[id] = slice
-        tileDefinitions[id] = TileInfo(id, suit, value, name, quantity)
+        tileDefinitions[id] = TileInfo(id, definition, quantity)
     }
 
     // Get a visual tile for a specific ID
@@ -141,7 +152,5 @@ class TileFactory {
         return fullSet.shuffled()
     }
 
-    fun getTileInfo(id: Int): TileInfo? {
-        return tileDefinitions[id]
-    }
+    fun getTileInfo(id: Int): TileInfo? = tileDefinitions[id]
 }

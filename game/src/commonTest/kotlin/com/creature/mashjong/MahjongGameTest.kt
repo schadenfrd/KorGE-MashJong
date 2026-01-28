@@ -2,10 +2,7 @@ package com.creature.mashjong
 
 import com.creature.mashjong.data.LevelGenerator
 import com.creature.mashjong.domain.logic.MahjongGame
-import com.creature.mashjong.domain.model.MatchResult
-import com.creature.mashjong.domain.model.TileInfo
-import com.creature.mashjong.domain.model.TilePosition
-import com.creature.mashjong.domain.model.TileSuit
+import com.creature.mashjong.domain.model.*
 import com.creature.mashjong.layout.TurtleLayoutStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,16 +14,16 @@ class MahjongGameTest {
 
     private val testProvider: (Int) -> TileInfo? = { id ->
         when (id) {
-            0 -> TileInfo(0, TileSuit.BAMBOO, 1)
-            1 -> TileInfo(1, TileSuit.BAMBOO, 1) // Match for 0
-            2 -> TileInfo(2, TileSuit.BAMBOO, 2) // Mismatch value
-            3 -> TileInfo(3, TileSuit.DOTS, 1)   // Mismatch suit
+            0 -> TileInfo(0, Suited(StandardSuit.BAMBOO, 1))
+            1 -> TileInfo(1, Suited(StandardSuit.BAMBOO, 1)) // Match for 0
+            2 -> TileInfo(2, Suited(StandardSuit.BAMBOO, 2)) // Mismatch value
+            3 -> TileInfo(3, Suited(StandardSuit.DOTS, 1))   // Mismatch suit
             
-            100 -> TileInfo(100, TileSuit.FLOWERS, 1)
-            101 -> TileInfo(101, TileSuit.FLOWERS, 2) // Match for 100
+            100 -> TileInfo(100, Flower.PLUM)
+            101 -> TileInfo(101, Flower.ORCHID) // Match for 100
             
-            200 -> TileInfo(200, TileSuit.SEASONS, 1)
-            201 -> TileInfo(201, TileSuit.SEASONS, 3) // Match for 200
+            200 -> TileInfo(200, Season.SPRING)
+            201 -> TileInfo(201, Season.AUTUMN) // Match for 200
             
             else -> null
         }
@@ -132,7 +129,7 @@ class MahjongGameTest {
     fun testGeneratedLevel_Blockage() {
         // Create a fake deck
         val deck = List(144) { i ->
-            TileInfo(i, TileSuit.BAMBOO, 1)
+            TileInfo(i, Suited(StandardSuit.BAMBOO, 1))
         }
         
         val level = LevelGenerator.generateLayout(deck, TurtleLayoutStrategy())

@@ -168,3 +168,13 @@
     "NEW INSTRUCTION": "WHEN initializing a Container that accesses stage?.views THEN add it to Stage before calling initialize"
 }
 
+[2026-01-28 17:41] - Updated by Junie - Error analysis
+{
+    "TYPE": "code error",
+    "TOOL": "GameScene.initialize",
+    "ERROR": "lateinit property game not initialized",
+    "ROOT CAUSE": "initialize was called before the GameScene was added to the Stage, so fields depending on stage/views were not set.",
+    "PROJECT NOTE": "In the app startup sequence, call addChild(gameScene) before invoking gameScene.initialize() to ensure stage/views are available.",
+    "NEW INSTRUCTION": "WHEN initialize uses stage or views THEN add container to Stage before initializing"
+}
+
