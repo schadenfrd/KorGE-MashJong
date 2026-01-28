@@ -5,7 +5,7 @@ plugins {
 }
 
 val ID = "com.creature.mashjong"
-val NAME = "Mish Mash-Jong"
+val NAME = "Mish-MashJong"
 val DESCRIPTION = "Mahjong Game"
 val ENTRY_POINT = "$ID.main"
 val ICON_PATH = "icon/mish-mash-jong.png"

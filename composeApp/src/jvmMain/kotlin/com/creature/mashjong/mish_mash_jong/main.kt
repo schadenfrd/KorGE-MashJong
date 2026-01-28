@@ -15,7 +15,7 @@ fun main() = application {
     Window(
         onCloseRequest = ::exitApplication,
         visible = isMenuVisible,
-        title = "Mish Mash-Jong",
+        title = "Mish-MashJong",
     ) {
         if (isMenuVisible) {
             MainMenu(onPlayClick = {

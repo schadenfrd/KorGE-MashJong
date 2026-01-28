@@ -30,7 +30,7 @@ fun MainMenu(onPlayClick: () -> Unit = {}) {
 //                Text("Click me!")
 //            }
             Button(onClick = onPlayClick) {
-                Text("Play Mish Mash-Jong")
+                Text("Play Mish-MashJong")
             }
 //            AnimatedVisibility(showContent) {
 //                val greeting = remember { Greeting().greet() }

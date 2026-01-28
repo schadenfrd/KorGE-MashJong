@@ -28,7 +28,7 @@ fun startGame(onClose: () -> Unit = {}) {
         val gameWindow = CreateDefaultGameWindow(
             config = GameWindowCreationConfig(
                 fullscreen = false,
-                title = "Mish Mash-Jong",
+                title = "Mish-MashJong",
             )
         ).apply {
             setSize(

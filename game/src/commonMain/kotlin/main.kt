@@ -29,7 +29,7 @@ suspend fun createGameWindow(
     ),
     fullScreen: Boolean = true,
 
-    title: String = "Mish Mash-Jong",
+    title: String = "Mish-MashJong",
     backgroundColor: RGBA? = Colors.DARKOLIVEGREEN,
     quality: GameWindow.Quality = GameWindow.Quality.QUALITY,
     onClose: () -> Unit = {},

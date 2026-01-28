@@ -59,7 +59,7 @@ fun startGame() {
             viewControllerToPresent = gameViewController,
             animated = true,
             completion = {
-                println("Mish Mash-Jong: Handover complete.")
+                println("Mish-MashJong: Handover complete.")
             }
         )
     }

@@ -121,16 +121,6 @@ class TileFactory {
         }
     }
 
-    private fun defineTile(
-        id: Int,
-        definition: TileDefinition,
-        slice: BmpSlice,
-        quantity: Int = 4
-    ) {
-        tileSlices[id] = slice
-        tileDefinitions[id] = TileInfo(id, definition, quantity)
-    }
-
     // Get a visual tile for a specific ID
     fun createTile(id: Int): Tile {
         val slice = tileSlices[id]
@@ -153,4 +143,14 @@ class TileFactory {
     }
 
     fun getTileInfo(id: Int): TileInfo? = tileDefinitions[id]
+
+    private fun defineTile(
+        id: Int,
+        definition: TileDefinition,
+        slice: BmpSlice,
+        quantity: Int = 4
+    ) {
+        tileSlices[id] = slice
+        tileDefinitions[id] = TileInfo(id, definition, quantity)
+    }
 }

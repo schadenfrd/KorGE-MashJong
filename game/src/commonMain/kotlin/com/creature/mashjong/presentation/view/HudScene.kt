@@ -90,19 +90,20 @@ class HudScene(
 
     fun showGameOver(victory: Boolean) {
         container {
-            val bg = solidRect(500.0, 400.0, Colors.BLACK.withAd(0.9))
+            val bg = solidRect(width = 500.0, height = 400.0, color = Colors.FORESTGREEN)
             // Center on stage or parent
             centerOnStage()
 
             val msg = if (victory) "VICTORY!" else "No More Moves!"
             val color = if (victory) Colors.GOLD else Colors.RED
 
-            text(msg, textSize = 50.0, color = color) {
+            text(text = msg, textSize = 50.0, color = color) {
                 centerOn(bg)
                 y -= 60
             }
 
-            uiButton(label = "Back to Menu", size = Size(200, 70)) {
+            uiButton(label = "Back to Menu", size = Size(width = 200, height = 70)) {
+                textSize = 30.0
                 centerOn(bg)
                 y += 60
                 onClick {

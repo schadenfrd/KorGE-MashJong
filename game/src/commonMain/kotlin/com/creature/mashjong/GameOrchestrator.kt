@@ -29,7 +29,8 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
 
         val deck = tileFactory.createDeck()
         // Extract just the logic info for the generator
-        val levelData = LevelGenerator.generateLayout(deck, settings.layoutStrategy)
+        val levelData = LevelGenerator
+            .generateLayout(deck = deck, strategy = settings.layoutStrategy)
         val game = MahjongGame(
             initialTiles = levelData,
             tileInfoProvider = tileFactory::getTileInfo,
