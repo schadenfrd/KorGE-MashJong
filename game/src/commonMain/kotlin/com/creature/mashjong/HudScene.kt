@@ -29,7 +29,12 @@ class HudScene(
         val screenHeight = views.virtualHeightDouble
 
         // Transparent background for sizing/alignment
-        solidRect(screenWidth, screenHeight, Colors.TRANSPARENT)
+        // Disable mouse interaction so clicks pass through to the game board
+        solidRect(
+            width = screenWidth,
+            height = screenHeight,
+            color = Colors.TRANSPARENT
+        ).mouseEnabled = false
 
         // UI Scaling: Reference 720p short edge
         val shortEdge = if (screenWidth < screenHeight) screenWidth else screenHeight
