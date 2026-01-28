@@ -54,6 +54,11 @@ fun startGame(onClose: () -> Unit = {}) {
         }
 
         logger.debug { "Starting game..." }
-        gameStart(gameWindow = gameWindow)
+        gameStart(
+            gameWindow = gameWindow,
+            onClose = {
+                gameWindow.close()
+            }
+        )
     }
 }

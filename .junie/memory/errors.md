@@ -138,3 +138,13 @@
     "NEW INSTRUCTION": "WHEN iOS FileNotFoundException for atlas asset THEN add KMP resources to Xcode Copy Bundle Resources"
 }
 
+[2026-01-27 14:14] - Updated by Junie - Error analysis
+{
+    "TYPE": "env/setup",
+    "TOOL": "run_test",
+    "ERROR": "Xcode does not support tvos_simulator_arm64 simulator tests",
+    "ROOT CAUSE": "Gradle attempted to run tvOS simulator tests on a machine without the required tvOS SDK/device support.",
+    "PROJECT NOTE": "Disable :game:tvosSimulatorArm64Test in the KMP config (e.g., tvosSimulatorArm64 { testRuns[\"test\"].isEnabled = false }) or remove the tvOS target when the environment lacks tvOS SDK.",
+    "NEW INSTRUCTION": "WHEN build logs mention tvosSimulatorArm64Test device unsupported THEN disable tvOS simulator test task in :game build"
+}
+

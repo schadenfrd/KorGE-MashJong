@@ -153,4 +153,41 @@ class MahjongGameTest {
         val isFree = game.isTileFree(target)
         assertFalse(isFree, "Tile at (1, 5, 9) should be blocked by neighbors at 3 and 7")
     }
+
+    @Test
+    fun testAdvancedFeatures() {
+        // Arrange vertically so they are all free (no horizontal blocking)
+        val t1 = TilePosition(0,0,0, 0)
+        val t2 = TilePosition(0,0,4, 1) // Match
+        val t3 = TilePosition(0,0,8, 2) // No match for t1/t2
+        val t4 = TilePosition(0,0,12, 3) // No match
+
+        val game = MahjongGame(listOf(t1, t2, t3, t4), testProvider)
+
+        // 1. Check Hints
+        assertEquals(3, game.hintsRemaining)
+        val hint = game.getHint()
+        assertNotNull(hint)
+        assertTrue( (hint.first == t1 && hint.second == t2) || (hint.first == t2 && hint.second == t1) )
+        assertEquals(2, game.hintsRemaining)
+
+        // 2. Check Undo
+        // Perform match
+        game.onTileClick(t1)
+        game.onTileClick(t2)
+        assertEquals(2, game.getActiveTiles().size)
+        
+        // Undo
+        assertEquals(3, game.undosRemaining)
+        assertTrue(game.undo())
+        assertEquals(4, game.getActiveTiles().size)
+        assertEquals(2, game.undosRemaining)
+        
+        // 3. Check No Moves
+        val gameNoMoves = MahjongGame(listOf(t3, t4), testProvider)
+        assertFalse(gameNoMoves.hasValidMoves())
+        
+        val gameWithMoves = MahjongGame(listOf(t1, t2), testProvider)
+        assertTrue(gameWithMoves.hasValidMoves())
+    }
 }

@@ -178,3 +178,53 @@
     "NEW INSTRUCTION": "WHEN user asks rules clarification THEN restate rule precisely and resolve edge case with rationale"
 }
 
+[2026-01-27 14:07] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "specify file paths, integrate UI, add tests, create files, run build",
+    "BOTTLENECK": "No integration, build, or tests to verify the proposed features.",
+    "PROJECT NOTE": "Use module game; place tests in game/src/commonTest/kotlin and run ./gradlew :game:runJvm and :game:test.",
+    "NEW INSTRUCTION": "WHEN proposing architecture for new feature THEN list file paths, integration steps, create files, run build, add basic test"
+}
+
+[2026-01-27 14:22] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "scan project, refactor main, add HUD, wire buttons, update onTileClick history, implement no-moves alert, run build",
+    "BOTTLENECK": "Logic changes started without parallel UI integration and scene refactor.",
+    "PROJECT NOTE": "Current main.kt runs mainStage directly; introduce menu and game scenes as Containers before wiring HUD.",
+    "NEW INSTRUCTION": "WHEN feature spans logic and UI THEN plan and implement UI wiring before code edits"
+}
+
+[2026-01-27 21:02] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "create menu,add tests",
+    "MISSING STEPS": "scan project,review entrypoints,align with existing menu,reposition HUD,run app",
+    "BOTTLENECK": "Did not inspect existing entry flow and Compose menu before implementing UI.",
+    "PROJECT NOTE": "Current Korge menu duplicates an existing Compose main menu; integrate via AndroidGameActivity/MainViewController.",
+    "NEW INSTRUCTION": "WHEN task references specific classes or screens THEN open them and map current flow first"
+}
+
+[2026-01-27 21:09] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "close window",
+    "MISSING STEPS": "integrate quit with AndroidGameActivity/MainViewController, add fixed-scale HUD container, anchor HUD to stage corners, size HUD buttons for touch, verify on device",
+    "BOTTLENECK": "Quit relied on window close instead of host navigation callback.",
+    "PROJECT NOTE": "Use the existing AndroidGameActivity/MainViewController flow by passing an onQuit callback into startGame and invoking it from the Quit button.",
+    "NEW INSTRUCTION": "WHEN host UI manages navigation THEN call provided onQuit callback instead of closing window"
+}
+
+[2026-01-27 21:20] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "add internal menu",
+    "MISSING STEPS": "analyze viewport, set virtual size, fit board, reserve safe areas, wire quit callback",
+    "BOTTLENECK": "Viewport and scaling were not planned, so the board and HUD layout broke.",
+    "PROJECT NOTE": "DefaultViewport.SIZE is 1280x720; derive virtualSize from device/window and scale board to safe area.",
+    "NEW INSTRUCTION": "WHEN board looks small or HUD overlaps THEN set virtualSize and scale board to safe area"
+}
+

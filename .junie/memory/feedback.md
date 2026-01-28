@@ -134,3 +134,27 @@
     "NEW INSTRUCTION": "WHEN detecting side neighbors THEN consider footprint overlap with tolerance, not exact x equality"
 }
 
+[2026-01-27 20:58] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "Menu integration + HUD layout",
+    "EXPECTATION": "They want the existing Compose-driven menu flow (AndroidGameActivity/MainViewController) used to start the game, and in-game buttons positioned at screen edges (Undo/Hint bottom-right, Go to Menu top-right) without covering tiles.",
+    "NEW INSTRUCTION": "WHEN starting game flow THEN integrate with AndroidGameActivity/MainViewController compose menu"
+}
+
+[2026-01-27 21:05] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "HUD layout and navigation",
+    "EXPECTATION": "They want large in-game buttons anchored at screen edges (not covering tiles) and the Quit button to return to the main menu.",
+    "NEW INSTRUCTION": "WHEN adding in-game HUD buttons THEN anchor to screen edges with padding; wire Quit to showMenu()"
+}
+
+[2026-01-27 21:16] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "Board scale and HUD",
+    "EXPECTATION": "They want the tiles/board to fill most of the screen (not tiny) and the HUD buttons anchored to screen edges, large, and not covering tiles.",
+    "NEW INSTRUCTION": "WHEN using DefaultViewport 1280x720 THEN scale BoardView to ~85% stage size with safe padding"
+}
+

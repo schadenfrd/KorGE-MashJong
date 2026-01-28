@@ -69,6 +69,7 @@ class BoardView(
     fun removeTiles(tilesToRemove: List<TilePosition>) {
         for (pos in tilesToRemove) {
             val tile = tileViews[pos]
+
             if (tile != null) {
                 tile.removeFromParent()
                 tileViews.remove(pos)

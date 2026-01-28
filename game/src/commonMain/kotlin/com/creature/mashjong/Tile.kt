@@ -51,8 +51,8 @@ class Tile(
             size = Size(WIDTH, HEIGHT),
             radius = RectCorners(8.0),
             fill = Colors.TRANSPARENT,
-            stroke = Colors.YELLOW,
-            strokeThickness = 6.0
+            stroke = Colors.HOTPINK,
+            strokeThickness = 8.0
         ).also { it.visible = false }
     }
 

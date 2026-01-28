@@ -3,6 +3,7 @@ package com.creature.mashjong.mish_mash_jong
 import android.R.anim.fade_in
 import android.R.anim.fade_out
 import com.creature.mashjong.gameStart
+import korlibs.math.geom.Size
 import korlibs.render.GameWindowCreationConfig
 import korlibs.render.KorgwActivity
 
@@ -10,7 +11,13 @@ class AndroidGameActivity : KorgwActivity(
     config = GameWindowCreationConfig(fullscreen = true)
 ) {
     override suspend fun activityMain() {
-        gameStart()
+        val displayMetrics = resources.displayMetrics
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
+        gameStart(
+            windowSize = Size(width.toDouble(), height.toDouble()),
+            onClose = { finish() }
+        )
     }
 
     override fun finish() {

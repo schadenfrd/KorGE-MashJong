@@ -3,9 +3,9 @@ package com.creature.mashjong
 import kotlin.math.abs
 
 sealed class MatchResult {
-    object Ignored : MatchResult()
-    object Blocked : MatchResult()
-    object Deselected : MatchResult()
+    data object Ignored : MatchResult()
+    data object Blocked : MatchResult()
+    data object Deselected : MatchResult()
     data class Selected(val tile: TilePosition) : MatchResult()
     data class Match(val tileA: TilePosition, val tileB: TilePosition) : MatchResult()
 }
@@ -15,12 +15,64 @@ class MahjongGame(
     private val tileInfoProvider: (Int) -> TileInfo?
 ) {
     private val tiles = initialTiles.toMutableList()
-    
+
+    // New Features state
+    val maxUndos = 3
+    val maxHints = 3
+    var undosRemaining = maxUndos
+        private set
+    var hintsRemaining = maxHints
+        private set
+    private val history = mutableListOf<Pair<TilePosition, TilePosition>>()
+
     var selectedTile: TilePosition? = null
         private set
         
     fun getActiveTiles(): List<TilePosition> = tiles.toList()
-    
+
+    fun undo(): Boolean {
+        if (undosRemaining <= 0 || history.isEmpty()) return false
+
+        val lastMove = history.removeAt(history.lastIndex)
+        tiles.add(lastMove.first)
+        tiles.add(lastMove.second)
+
+        undosRemaining--
+        selectedTile = null
+        return true
+    }
+
+    fun getHint(): Pair<TilePosition, TilePosition>? {
+        if (hintsRemaining <= 0) return null
+
+        val active = getActiveTiles()
+        val freeTiles = active.filter { isTileFree(it) }
+
+        for (i in freeTiles.indices) {
+            for (j in i + 1 until freeTiles.size) {
+                val t1 = freeTiles[i]
+                val t2 = freeTiles[j]
+                if (isMatch(t1, t2)) {
+                    hintsRemaining--
+                    return t1 to t2
+                }
+            }
+        }
+        return null
+    }
+
+    fun hasValidMoves(): Boolean {
+        val active = getActiveTiles()
+        val freeTiles = active.filter { isTileFree(it) }
+
+        for (i in freeTiles.indices) {
+            for (j in i + 1 until freeTiles.size) {
+                if (isMatch(freeTiles[i], freeTiles[j])) return true
+            }
+        }
+        return false
+    }
+
     fun isTileFree(tile: TilePosition): Boolean {
         // 1. Check Top Cover (Layer + 1)
         // A tile is covered if any tile on the layer above overlaps it.
@@ -97,6 +149,7 @@ class MahjongGame(
                 // Valid Match
                 tiles.remove(currentSelection)
                 tiles.remove(tile)
+                history.add(currentSelection to tile)
                 selectedTile = null
                 return MatchResult.Match(currentSelection, tile)
             } else {
