@@ -2,7 +2,7 @@ package com.creature.mashjong.mish_mash_jong
 
 import android.R.anim.fade_in
 import android.R.anim.fade_out
-import com.creature.mashjong.gameStart
+import com.creature.mashjong.createGameWindow
 import korlibs.math.geom.Size
 import korlibs.render.GameWindowCreationConfig
 import korlibs.render.KorgwActivity
@@ -14,8 +14,9 @@ class AndroidGameActivity : KorgwActivity(
         val displayMetrics = resources.displayMetrics
         val width = displayMetrics.widthPixels
         val height = displayMetrics.heightPixels
-        gameStart(
-            windowSize = Size(width.toDouble(), height.toDouble()),
+
+        createGameWindow(
+            windowSize = Size(width = width.toDouble(), height = height.toDouble()),
             onClose = { finish() }
         )
     }

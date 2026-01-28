@@ -7,7 +7,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
-import com.creature.mashjong.gameStart
+import com.creature.mashjong.createGameWindow
 import korlibs.math.geom.Scale
 import kotlinx.coroutines.delay
 
@@ -27,7 +27,7 @@ fun main() {
             if (isGameRunning) {
                 // We use a small delay to let Compose clear the DOM
                 delay(timeMillis = 100)
-                gameStart(
+                createGameWindow(
                     fullScreen = false, // MUST BE FALSE ON WEB
                     scale = Scale(scale = 0.4)
                 )

@@ -1,6 +1,6 @@
 package com.creature.mashjong
 
-import kotlin.math.abs
+import com.creature.mashjong.layout.LayoutStrategy
 
 sealed class MatchResult {
     data object Ignored : MatchResult()
@@ -12,6 +12,7 @@ sealed class MatchResult {
 
 class MahjongGame(
     initialTiles: List<TilePosition>,
+    private val layoutStrategy: LayoutStrategy,
     private val tileInfoProvider: (Int) -> TileInfo?
 ) {
     private val tiles = initialTiles.toMutableList()
@@ -27,11 +28,11 @@ class MahjongGame(
 
     var selectedTile: TilePosition? = null
         private set
-        
+
     fun getActiveTiles(): List<TilePosition> = tiles.toList()
 
-    fun undo(): Boolean {
-        if (undosRemaining <= 0 || history.isEmpty()) return false
+    fun undo(): List<TilePosition> {
+        if (undosRemaining <= 0 || history.isEmpty()) return emptyList()
 
         val lastMove = history.removeAt(history.lastIndex)
         tiles.add(lastMove.first)
@@ -39,7 +40,8 @@ class MahjongGame(
 
         undosRemaining--
         selectedTile = null
-        return true
+
+        return listOf(lastMove.first, lastMove.second)
     }
 
     fun getHint(): Pair<TilePosition, TilePosition>? {
@@ -74,50 +76,21 @@ class MahjongGame(
     }
 
     fun isTileFree(tile: TilePosition): Boolean {
-        // 1. Check Top Cover (Layer + 1)
-        // A tile is covered if any tile on the layer above overlaps it.
-        // Coordinate system: Grid steps of 2. Tile size ~2x2.
-        // Overlap condition: abs(x1 - x2) < 2 && abs(y1 - y2) < 2
-        val covered = tiles.any { other ->
-            other.layer == tile.layer + 1 &&
-            abs(other.x - tile.x) < 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        if (covered) return false
-        
-        // 2. Check Sides (Left/Right) at same layer
-        // A tile is blocked if it has neighbors on BOTH Left and Right.
-        // Left Neighbor: x = tile.x - 2, overlapping Y
-        // Right Neighbor: x = tile.x + 2, overlapping Y
-        
-        val hasLeft = tiles.any { other ->
-            other.layer == tile.layer &&
-            other.x == tile.x - 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        
-        val hasRight = tiles.any { other ->
-            other.layer == tile.layer &&
-            other.x == tile.x + 2 &&
-            abs(other.y - tile.y) < 2
-        }
-        
-        // Free if it doesn't have BOTH (Left AND Right)
-        return !(hasLeft && hasRight)
+        return !layoutStrategy.isTileBlocked(tile, tiles)
     }
-    
+
     fun isMatch(tileA: TilePosition, tileB: TilePosition): Boolean {
         // If exact same instance (should be handled by caller usually, but logic here: same tile is not a match with itself)
         if (tileA == tileB) return false
-        
+
         val infoA = tileInfoProvider(tileA.tileId) ?: return false
         val infoB = tileInfoProvider(tileB.tileId) ?: return false
-        
+
         // 1. Suits must match (except special cases logic below handles suit grouping)
         // Actually, Flowers and Seasons have their own suits.
-        
+
         if (infoA.suit != infoB.suit) return false
-        
+
         // 2. Value logic
         return when (infoA.suit) {
             TileSuit.FLOWERS -> true // Any Flower matches any Flower
@@ -125,16 +98,16 @@ class MahjongGame(
             else -> infoA.value == infoB.value // Standard: Value must match (e.g. 5 Bamboo == 5 Bamboo)
         }
     }
-    
+
     fun onTileClick(tile: TilePosition): MatchResult {
         // Verify tile is still on board
         if (tile !in tiles) return MatchResult.Ignored
-        
+
         // Verify tile is free
         if (!isTileFree(tile)) return MatchResult.Blocked
-        
+
         val currentSelection = selectedTile
-        
+
         if (currentSelection == null) {
             selectedTile = tile
             return MatchResult.Selected(tile)
@@ -144,17 +117,19 @@ class MahjongGame(
                 selectedTile = null
                 return MatchResult.Deselected
             }
-            
+
             if (isMatch(currentSelection, tile)) {
                 // Valid Match
                 tiles.remove(currentSelection)
                 tiles.remove(tile)
                 history.add(currentSelection to tile)
                 selectedTile = null
+
                 return MatchResult.Match(currentSelection, tile)
             } else {
                 // Not a match -> Select the new tile
                 selectedTile = tile
+
                 return MatchResult.Selected(tile)
             }
         }

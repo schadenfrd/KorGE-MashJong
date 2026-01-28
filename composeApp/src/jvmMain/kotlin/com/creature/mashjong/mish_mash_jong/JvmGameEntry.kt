@@ -1,12 +1,11 @@
 package com.creature.mashjong.mish_mash_jong
 
-import com.creature.mashjong.gameStart
+import com.creature.mashjong.createGameWindow
 import korlibs.event.DestroyEvent
 import korlibs.event.DisposeEvent
 import korlibs.event.StopEvent
 import korlibs.korge.internal.DefaultViewport
 import korlibs.logger.Logger
-import korlibs.math.geom.Size2D
 import korlibs.render.CreateDefaultGameWindow
 import korlibs.render.GameWindowCreationConfig
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +53,7 @@ fun startGame(onClose: () -> Unit = {}) {
         }
 
         logger.debug { "Starting game..." }
-        gameStart(
+        createGameWindow(
             gameWindow = gameWindow,
             onClose = {
                 gameWindow.close()

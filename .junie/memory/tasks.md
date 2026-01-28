@@ -228,3 +228,13 @@
     "NEW INSTRUCTION": "WHEN board looks small or HUD overlaps THEN set virtualSize and scale board to safe area"
 }
 
+[2026-01-28 12:15] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "refactor architecture,add tests,resource sync setup,rewrite entry with new scene,change scale mode repeatedly",
+    "MISSING STEPS": "inspect layout,define safe area,anchor HUD to edges,scale board to safe area,verify quit wiring to platform navigation,device/resolution test",
+    "BOTTLENECK": "No safe-area based layout; HUD anchored to board instead of stage and quit not wired.",
+    "PROJECT NOTE": "Use AndroidGameActivity/MainViewController to handle quit/navigation; place HUD in a fixed overlay layer anchored to stage edges and scale BoardView to remaining bounds.",
+    "NEW INSTRUCTION": "WHEN UI overlaps tiles or misaligned across resolutions THEN compute stage safe area, anchor HUD to edges, scale board to fit"
+}
+

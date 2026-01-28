@@ -158,3 +158,43 @@
     "NEW INSTRUCTION": "WHEN using DefaultViewport 1280x720 THEN scale BoardView to ~85% stage size with safe padding"
 }
 
+[2026-01-28 11:34] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "Architecture and performance",
+    "EXPECTATION": "They want MahjongGame decoupled (logic vs geometry vs history), layout rules abstracted (not hardcoded in isTileFree), BoardView to reuse views instead of recreating, and main.kt to separate UI flow from initialization.",
+    "NEW INSTRUCTION": "WHEN refactoring core game code THEN decouple modules and avoid hardcoded layout rules"
+}
+
+[2026-01-28 12:12] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "HUD bound to board",
+    "EXPECTATION": "HUD buttons should use full screen space and anchor to screen edges, not overlap tiles or be constrained by the board bounds.",
+    "NEW INSTRUCTION": "WHEN adding in-game HUD/buttons THEN attach to stage/root and anchor to stage edges"
+}
+
+[2026-01-28 12:24] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "HUD decoupling from board",
+    "EXPECTATION": "They want the HUD laid out using the full screen (stage) dimensions, not constrained by the game board/container, so buttons reach the screen edges.",
+    "NEW INSTRUCTION": "WHEN HUD aligns short of screen edges THEN add HUD to stage/root and use stage size"
+}
+
+[2026-01-28 12:27] - Updated by Junie
+{
+    "TYPE": "positive",
+    "CATEGORY": "Plan approved",
+    "EXPECTATION": "They approved the proposed plan and want it implemented now with code changes.",
+    "NEW INSTRUCTION": "WHEN user says to implement the plan THEN proceed to code changes with integration steps"
+}
+
+[2026-01-28 12:48] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "HUD layout debugging",
+    "EXPECTATION": "They want visible debug backgrounds on game and HUD layers (RED/BLUE) to inspect their bounds and diagnose why the HUD is squashed in the top-left.",
+    "NEW INSTRUCTION": "WHEN HUD appears squashed top-left THEN add stage-sized red and blue debug backgrounds"
+}
+

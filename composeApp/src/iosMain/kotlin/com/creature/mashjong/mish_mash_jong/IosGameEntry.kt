@@ -2,7 +2,7 @@
 
 package com.creature.mashjong.mish_mash_jong
 
-import com.creature.mashjong.gameStart
+import com.creature.mashjong.createGameWindow
 import korlibs.math.geom.Size
 import korlibs.render.IosGameWindow
 import korlibs.render.MyGLKViewController
@@ -39,7 +39,7 @@ fun startGame() {
                 val height = bounds.useContents { size.height }
 
                 // This is your commonMain game entry
-                gameStart(
+                createGameWindow(
                     gameWindow = gameWindow,
                     windowSize = Size(width, height),
                     onClose = {
