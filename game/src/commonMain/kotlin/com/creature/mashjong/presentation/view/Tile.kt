@@ -3,6 +3,7 @@ package com.creature.mashjong.presentation.view
 import korlibs.image.bitmap.BmpSlice
 import korlibs.image.color.Colors
 import korlibs.korge.view.Container
+import korlibs.korge.view.Image
 import korlibs.korge.view.RoundRect
 import korlibs.korge.view.align.centerOn
 import korlibs.korge.view.image
@@ -26,7 +27,8 @@ class Tile(
         const val FACE_HEIGHT = HEIGHT - PADDING
     }
 
-    private var selectionView: RoundRect
+    private val selectionView: RoundRect
+    private val faceView: Image
 
     init {
         // 1. Drop Shadow (for depth)
@@ -37,7 +39,7 @@ class Tile(
         ).xy(x = 4.0 + layer * 2.0, y = 4.0 + layer * 2.0)
 
         // 2. Draw the face image centered on the tile
-        image(texture = face).apply {
+        faceView = image(texture = face).apply {
             // Scale image to fit FACE dimensions (scale up or down)
             val scaleX = FACE_WIDTH / width
             val scaleY = FACE_HEIGHT / height
@@ -59,5 +61,9 @@ class Tile(
 
     fun setSelect(selected: Boolean) {
         selectionView.visible = selected
+    }
+
+    fun setBlocked(blocked: Boolean) {
+        faceView.colorMul = if (blocked) Colors.DARKGRAY else Colors.WHITE
     }
 }

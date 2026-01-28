@@ -16,6 +16,7 @@ import korlibs.korge.view.Container
 
 class GameOrchestrator(val onClose: () -> Unit) : Container() {
     private lateinit var viewModel: GameViewModel
+    private lateinit var game: MahjongGame
     private lateinit var boardView: BoardView
     private lateinit var gameScene: GameScene
     private lateinit var hudScene: HudScene
@@ -37,6 +38,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             maxUndos = settings.maxUndos,
             maxHints = settings.maxHints
         )
+        this.game = game
         viewModel = GameViewModel(game)
 
         // 2. Create Views
@@ -70,6 +72,9 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
 
         // Initialize HUD (it handles its own layout/background)
         hudScene.initialize()
+
+        // Initial visual refresh to show blocked states
+        boardView.refreshVisuals { game.isTileBlocked(it) }
     }
 
     private fun handleTileClick(pos: TilePosition) {
@@ -83,6 +88,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             is MatchResult.Match -> {
                 boardView.removeTiles(listOf(result.tileA, result.tileB))
                 boardView.setSelection(null)
+                boardView.refreshVisuals { game.isTileBlocked(it) }
                 checkGameOver()
             }
         }
@@ -93,6 +99,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
         val restored = viewModel.onUndo()
         if (restored.isNotEmpty()) {
             boardView.addTiles(restored)
+            boardView.refreshVisuals { game.isTileBlocked(it) }
         }
     }
 

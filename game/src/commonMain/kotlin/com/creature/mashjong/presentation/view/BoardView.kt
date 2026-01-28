@@ -81,4 +81,11 @@ class BoardView(
             }
         }
     }
+
+    fun refreshVisuals(isTileBlocked: (TilePosition) -> Boolean) {
+        for ((pos, tile) in tileViews) {
+            val blocked = isTileBlocked(pos)
+            tile.setBlocked(blocked)
+        }
+    }
 }

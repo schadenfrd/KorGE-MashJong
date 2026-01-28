@@ -136,7 +136,7 @@ class MahjongGame(
         }
     }
 
-    private fun isTileBlocked(tile: TilePosition): Boolean {
+    fun isTileBlocked(tile: TilePosition): Boolean {
         val covered = tiles.any { other ->
             other.layer == tile.layer + 1 &&
                     abs(other.x - tile.x) < 2 &&

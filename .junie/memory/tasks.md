@@ -338,3 +338,13 @@
     "NEW INSTRUCTION": "WHEN Tile constructor parameters change THEN update TileFactory and BoardView to pass new args"
 }
 
+[2026-01-28 19:27] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "expose blocked query",
+    "BOTTLENECK": "isTileBlocked is private, blocking UI from querying blocked state.",
+    "PROJECT NOTE": "Make MahjongGame.isTileBlocked public (or provide public isTileBlocked/isTileFree), then BoardView/GameOrchestrator can refresh visuals after start/click/undo.",
+    "NEW INSTRUCTION": "WHEN blocked state query is private in MahjongGame THEN expose isTileBlocked as public"
+}
+
