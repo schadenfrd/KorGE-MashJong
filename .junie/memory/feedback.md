@@ -238,3 +238,11 @@
     "NEW INSTRUCTION": "WHEN user approves a proposed plan THEN implement it with code and integration steps"
 }
 
+[2026-01-28 23:09] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "Android branding mismatch",
+    "EXPECTATION": "They expected Android to show the custom launcher icon and the app label 'Mish-MashJong' instead of the default icon and 'mish_mash_jong'.",
+    "NEW INSTRUCTION": "WHEN configuring Android app branding THEN set launcher icon assets and android:label to 'Mish-MashJong'"
+}
+
