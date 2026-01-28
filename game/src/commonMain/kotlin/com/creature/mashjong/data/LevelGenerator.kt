@@ -1,12 +1,13 @@
-package com.creature.mashjong
+package com.creature.mashjong.data
 
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TilePosition
 import com.creature.mashjong.layout.LayoutStrategy
-import korlibs.image.bitmap.BmpSlice
 
 object LevelGenerator {
 
     fun generateLayout(
-        deck: List<Pair<TileInfo, BmpSlice>>,
+        deck: List<TileInfo>,
         strategy: LayoutStrategy
     ): List<TilePosition> {
         val slots = strategy.getLayoutSlots()
@@ -17,7 +18,7 @@ object LevelGenerator {
 
         for (i in 0 until tileCount) {
             val slot = slots[i]
-            val tileInfo = deck[i].first
+            val tileInfo = deck[i]
 
             result.add(TilePosition(slot.layer, slot.x, slot.y, tileInfo.id))
         }

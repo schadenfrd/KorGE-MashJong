@@ -1,24 +1,20 @@
-package com.creature.mashjong
+package com.creature.mashjong.domain.logic
 
+import com.creature.mashjong.domain.model.MatchResult
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TilePosition
+import com.creature.mashjong.domain.model.TileSuit
 import kotlin.math.abs
-
-sealed class MatchResult {
-    data object Ignored : MatchResult()
-    data object Blocked : MatchResult()
-    data object Deselected : MatchResult()
-    data class Selected(val tile: TilePosition) : MatchResult()
-    data class Match(val tileA: TilePosition, val tileB: TilePosition) : MatchResult()
-}
 
 class MahjongGame(
     initialTiles: List<TilePosition>,
-    private val tileInfoProvider: (Int) -> TileInfo?
+    private val tileInfoProvider: (Int) -> TileInfo?,
+    val maxUndos: Int = 3,
+    val maxHints: Int = 3
 ) {
     private val tiles = initialTiles.toMutableList()
 
     // New Features state
-    val maxUndos = 3
-    val maxHints = 3
     var undosRemaining = maxUndos
         private set
     var hintsRemaining = maxHints

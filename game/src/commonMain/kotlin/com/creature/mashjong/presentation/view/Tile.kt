@@ -1,4 +1,4 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.view
 
 import korlibs.image.bitmap.BmpSlice
 import korlibs.image.color.Colors

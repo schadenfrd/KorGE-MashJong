@@ -1,5 +1,6 @@
 package com.creature.mashjong
 
+import com.creature.mashjong.presentation.view.Tile
 import korlibs.image.bitmap.Bitmap32
 import korlibs.image.bitmap.sliceWithSize
 import korlibs.image.color.Colors

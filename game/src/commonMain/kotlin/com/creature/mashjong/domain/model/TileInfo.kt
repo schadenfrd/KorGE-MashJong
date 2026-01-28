@@ -1,4 +1,4 @@
-package com.creature.mashjong
+package com.creature.mashjong.domain.model
 
 enum class TileSuit { DOTS, BAMBOO, CHARACTERS, HONORS, FLOWERS, SEASONS }
 

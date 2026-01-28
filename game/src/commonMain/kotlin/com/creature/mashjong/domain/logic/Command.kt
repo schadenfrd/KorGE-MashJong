@@ -1,4 +1,6 @@
-package com.creature.mashjong
+package com.creature.mashjong.domain.logic
+
+import com.creature.mashjong.domain.model.TilePosition
 
 interface Command {
     fun execute()

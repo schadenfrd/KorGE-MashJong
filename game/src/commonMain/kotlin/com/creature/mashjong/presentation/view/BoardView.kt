@@ -1,12 +1,11 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.view
 
+import com.creature.mashjong.domain.model.TilePosition
+import com.creature.mashjong.presentation.infrastructure.TileFactory
 import korlibs.korge.input.onClick
 import korlibs.korge.view.Container
 import korlibs.korge.view.xy
 import korlibs.math.geom.Point
-
-// Simple data class to hold a tile's logical position
-data class TilePosition(val layer: Int, val x: Int, val y: Int, val tileId: Int)
 
 class BoardView(
     val factory: TileFactory,

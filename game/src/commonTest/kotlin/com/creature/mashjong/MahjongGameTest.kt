@@ -1,13 +1,17 @@
 package com.creature.mashjong
 
+import com.creature.mashjong.data.LevelGenerator
+import com.creature.mashjong.domain.logic.MahjongGame
+import com.creature.mashjong.domain.model.MatchResult
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TilePosition
+import com.creature.mashjong.domain.model.TileSuit
 import com.creature.mashjong.layout.TurtleLayoutStrategy
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
-import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
-import korlibs.image.bitmap.Bitmap32
-import korlibs.image.bitmap.sliceWithSize
+import kotlin.test.assertTrue
 
 class MahjongGameTest {
 
@@ -127,9 +131,8 @@ class MahjongGameTest {
     @Test
     fun testGeneratedLevel_Blockage() {
         // Create a fake deck
-        val fakeSlice = Bitmap32(1, 1).sliceWithSize(0, 0, 1, 1)
         val deck = List(144) { i ->
-            TileInfo(i, TileSuit.BAMBOO, 1) to fakeSlice
+            TileInfo(i, TileSuit.BAMBOO, 1)
         }
         
         val level = LevelGenerator.generateLayout(deck, TurtleLayoutStrategy())
@@ -190,5 +193,12 @@ class MahjongGameTest {
         
         val gameWithMoves = MahjongGame(listOf(t1, t2), testProvider)
         assertTrue(gameWithMoves.hasValidMoves())
+    }
+
+    @Test
+    fun testCustomSettings() {
+        val game = MahjongGame(emptyList(), testProvider, maxUndos = 10, maxHints = 5)
+        assertEquals(10, game.undosRemaining)
+        assertEquals(5, game.hintsRemaining)
     }
 }

@@ -1,5 +1,10 @@
 package com.creature.mashjong
 
+import com.creature.mashjong.domain.logic.MahjongGame
+import com.creature.mashjong.domain.model.MatchResult
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TilePosition
+import com.creature.mashjong.domain.model.TileSuit
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs

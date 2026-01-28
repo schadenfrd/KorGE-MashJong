@@ -1,4 +1,4 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.view
 
 import korlibs.image.color.Colors
 import korlibs.korge.view.Container

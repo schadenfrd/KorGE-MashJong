@@ -1,8 +1,9 @@
 package com.creature.mashjong
 
+import com.creature.mashjong.data.LevelGenerator
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TileSuit
 import com.creature.mashjong.layout.TurtleLayoutStrategy
-import korlibs.image.bitmap.Bitmap32
-import korlibs.image.bitmap.slice
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -11,10 +12,8 @@ class LevelGeneratorTest {
     @Test
     fun testTurtleLayoutGeneration() {
         // Prepare a dummy deck of 144 tiles
-        val dummyBitmap = Bitmap32(1, 1)
-        val dummySlice = dummyBitmap.slice()
         val dummyInfo = TileInfo(0, TileSuit.DOTS, 1, "test")
-        val deck = List(144) { dummyInfo to dummySlice }
+        val deck = List(144) { dummyInfo }
 
         // Generate Layout
         val positions = LevelGenerator.generateLayout(deck, TurtleLayoutStrategy())

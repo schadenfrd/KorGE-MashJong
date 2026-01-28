@@ -1,11 +1,11 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.viewmodel
 
+import com.creature.mashjong.domain.logic.MahjongGame
+import com.creature.mashjong.domain.model.GameState
+import com.creature.mashjong.domain.model.MatchResult
+import com.creature.mashjong.domain.model.TilePosition
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-
-enum class GameState {
-    PLAYING, WON, LOST
-}
 
 class GameViewModel(private val game: MahjongGame) {
     private val _undosRemaining = MutableStateFlow(game.undosRemaining)

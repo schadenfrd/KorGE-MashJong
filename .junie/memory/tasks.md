@@ -288,3 +288,23 @@
     "NEW INSTRUCTION": "WHEN a scene needs stage-dependent initialization THEN add it to stage before initialize"
 }
 
+[2026-01-28 16:30] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "create directories,edit view,write files,duplicate model,partial shell edits",
+    "MISSING STEPS": "scan project,map responsibilities,confirm plan,run build,add tests",
+    "BOTTLENECK": "Premature code edits caused duplication and inconsistency before a complete plan.",
+    "PROJECT NOTE": "TilePosition exists in both BoardView and domain; LevelGenerator depends on BmpSlice (UI).",
+    "NEW INSTRUCTION": "WHEN task asks for plan or architecture review THEN scan project, list file-to-layer mapping, propose phased refactor, avoid code edits"
+}
+
+[2026-01-28 16:49] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "create domain packages, move model classes, refactor data generator, update factory, update orchestrator, update views imports, run build",
+    "BOTTLENECK": "No implementation of the planned refactor after drafting the plan.",
+    "PROJECT NOTE": "LevelGenerator and TileFactory still use BmpSlice; move TilePosition to domain and change createDeck/generateLayout to domain-only types.",
+    "NEW INSTRUCTION": "WHEN data layer uses UI types in signatures THEN replace with domain types and update callers"
+}
+

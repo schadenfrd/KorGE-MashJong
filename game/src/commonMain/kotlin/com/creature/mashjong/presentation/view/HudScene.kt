@@ -1,4 +1,6 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.view
+
+import com.creature.mashjong.presentation.viewmodel.GameViewModel
 
 import korlibs.image.color.Colors
 import korlibs.korge.input.onClick
@@ -24,6 +26,8 @@ class HudScene(
 ) : Container() {
 
     fun initialize() {
+        removeChildren()
+
         val views = stage?.views ?: return
         val screenWidth = views.virtualWidthDouble
         val screenHeight = views.virtualHeightDouble

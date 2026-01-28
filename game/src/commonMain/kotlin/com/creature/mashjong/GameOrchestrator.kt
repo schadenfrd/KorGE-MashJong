@@ -1,6 +1,15 @@
 package com.creature.mashjong
 
-import com.creature.mashjong.layout.TurtleLayoutStrategy
+import com.creature.mashjong.data.LevelGenerator
+import com.creature.mashjong.domain.logic.MahjongGame
+import com.creature.mashjong.domain.model.GameState
+import com.creature.mashjong.domain.model.MatchResult
+import com.creature.mashjong.domain.model.TilePosition
+import com.creature.mashjong.presentation.infrastructure.TileFactory
+import com.creature.mashjong.presentation.view.BoardView
+import com.creature.mashjong.presentation.view.GameScene
+import com.creature.mashjong.presentation.view.HudScene
+import com.creature.mashjong.presentation.viewmodel.GameViewModel
 import korlibs.image.format.readBitmap
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.view.Container
@@ -12,19 +21,20 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     private lateinit var hudScene: HudScene
     private var isGameOver = false
 
-    suspend fun start() {
+    suspend fun start(settings: GameSettings = GameSettings()) {
         // 1. Load Assets & Create Game
         val tileFactory = TileFactory()
-        val atlas = resourcesVfs["atlas_mish_mashjong.png"].readBitmap()
+        val atlas = resourcesVfs[settings.atlasPath].readBitmap()
         tileFactory.loadAtlas(atlas = atlas)
 
         val deck = tileFactory.createDeck()
-        val strategy = TurtleLayoutStrategy()
-        val levelData = LevelGenerator.generateLayout(deck, strategy)
-
+        // Extract just the logic info for the generator
+        val levelData = LevelGenerator.generateLayout(deck, settings.layoutStrategy)
         val game = MahjongGame(
             initialTiles = levelData,
-            tileInfoProvider = tileFactory::getTileInfo
+            tileInfoProvider = tileFactory::getTileInfo,
+            maxUndos = settings.maxUndos,
+            maxHints = settings.maxHints
         )
         viewModel = GameViewModel(game)
 

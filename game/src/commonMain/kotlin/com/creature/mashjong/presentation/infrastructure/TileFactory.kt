@@ -1,5 +1,8 @@
-package com.creature.mashjong
+package com.creature.mashjong.presentation.infrastructure
 
+import com.creature.mashjong.domain.model.TileInfo
+import com.creature.mashjong.domain.model.TileSuit
+import com.creature.mashjong.presentation.view.Tile
 import korlibs.image.bitmap.Bitmap
 import korlibs.image.bitmap.BmpSlice
 import korlibs.image.bitmap.sliceWithSize
@@ -125,15 +128,13 @@ class TileFactory {
         return Tile(id, slice)
     }
 
-    // Generate a full game deck (pairs of Info + Image)
-    fun createDeck(): List<Pair<TileInfo, BmpSlice>> {
-        val fullSet = mutableListOf<Pair<TileInfo, BmpSlice>>()
+    // Generate a full game deck (only logical info needed)
+    fun createDeck(): List<TileInfo> {
+        val fullSet = mutableListOf<TileInfo>()
 
         for (tileInfo in tileDefinitions.values) {
-            val slice = tileSlices[tileInfo.id] ?: continue
-
             repeat(tileInfo.quantity) {
-                fullSet.add(tileInfo to slice)
+                fullSet.add(tileInfo)
             }
         }
 
