@@ -22,6 +22,7 @@ class HudScene(
     val viewModel: GameViewModel,
     val onUndo: () -> Unit,
     val onHint: () -> Unit,
+    val onShuffle: () -> Unit,
     val onClose: () -> Unit
 ) : Container() {
 
@@ -74,7 +75,7 @@ class HudScene(
             }
 
         // Undo Button (Left of Hint)
-        uiButton(label = "Undo", size = Size(btnWidth, btnHeight)) {
+        val undoBtn = uiButton(label = "Undo", size = Size(btnWidth, btnHeight)) {
             textSize = 30.0 * uiScale
             alignRightToLeftOf(hintBtn, padding = 20)
             alignBottomToBottomOf(this@HudScene, padding = padding)
@@ -84,6 +85,16 @@ class HudScene(
             addUpdater {
                 text = "Undo (${viewModel.undosRemaining.value})"
                 enabled = viewModel.undosRemaining.value > 0
+            }
+        }
+
+        // Shuffle Button (Left of Undo)
+        uiButton(label = "Shuffle", size = Size(btnWidth, btnHeight)) {
+            textSize = 30.0 * uiScale
+            alignRightToLeftOf(undoBtn, padding = 20)
+            alignBottomToBottomOf(this@HudScene, padding = padding)
+            onClick {
+                onShuffle()
             }
         }
     }

@@ -3,13 +3,21 @@ package com.creature.mashjong.presentation.view
 import com.creature.mashjong.domain.model.TilePosition
 import com.creature.mashjong.presentation.infrastructure.TileFactory
 import korlibs.korge.input.onClick
+import korlibs.korge.input.onOut
+import korlibs.korge.input.onOver
+import korlibs.korge.tween.get
+import korlibs.korge.tween.tween
 import korlibs.korge.view.Container
 import korlibs.korge.view.xy
 import korlibs.math.geom.Point
+import korlibs.time.milliseconds
+import korlibs.io.async.launchImmediately
+import kotlinx.coroutines.Dispatchers
 
 class BoardView(
     val factory: TileFactory,
-    val onTileClick: (TilePosition) -> Unit
+    val onTileClick: (TilePosition) -> Unit,
+    val isBlockedPredicate: (TilePosition) -> Boolean
 ) : Container() {
 
     // Constants for positioning
@@ -34,7 +42,7 @@ class BoardView(
         addTiles(tilesToAdd = sortedTiles)
     }
 
-    fun addTiles(tilesToAdd: List<TilePosition>) {
+    fun addTiles(tilesToAdd: List<TilePosition>, animate: Boolean = false) {
         for (pos in tilesToAdd) {
             if (tileViews.containsKey(pos)) continue
 
@@ -57,8 +65,27 @@ class BoardView(
                 onTileClick(pos)
             }
 
+            tile.onOver {
+                if (!isBlockedPredicate(pos)) {
+                    tile.scale = 1.05
+                }
+            }
+
+            tile.onOut {
+                tile.scale = 1.0
+            }
+
             tileViews[pos] = tile
             addChild(tile)
+
+            if (animate) {
+                tile.alpha = 0.0
+                tile.scale = 0.5
+
+                launchImmediately(Dispatchers.Unconfined) {
+                    tile.tween(tile::alpha[1.0], tile::scale[1.0], time = 300.milliseconds)
+                }
+            }
         }
     }
 
@@ -82,10 +109,18 @@ class BoardView(
         }
     }
 
-    fun refreshVisuals(isTileBlocked: (TilePosition) -> Boolean) {
+    fun refreshVisuals() {
         for ((pos, tile) in tileViews) {
-            val blocked = isTileBlocked(pos)
+            val blocked = isBlockedPredicate(pos)
             tile.setBlocked(blocked)
         }
+    }
+
+    fun showHint(t1: TilePosition, t2: TilePosition) {
+        val view1 = tileViews[t1]
+        val view2 = tileViews[t2]
+
+        launchImmediately(Dispatchers.Unconfined) { view1?.pulse() }
+        launchImmediately(Dispatchers.Unconfined) { view2?.pulse() }
     }
 }

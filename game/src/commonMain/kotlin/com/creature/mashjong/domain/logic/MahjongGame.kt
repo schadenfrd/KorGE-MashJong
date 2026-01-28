@@ -158,5 +158,31 @@ class MahjongGame(
 
         return hasLeft && hasRight
     }
+
+    fun shuffle() {
+        if (tiles.isEmpty()) return
+
+        // 1. Snapshot current positions and IDs
+        val positions = tiles.map { Triple(it.layer, it.x, it.y) }
+        val ids = tiles.map { it.tileId }.shuffled()
+
+        // 2. Rebuild tiles list with shuffled IDs but same positions
+        tiles.clear()
+        for (i in positions.indices) {
+            val (layer, x, y) = positions[i]
+            val newId = ids[i]
+            tiles.add(TilePosition(layer, x, y, newId))
+        }
+
+        // 3. Reset state
+        selectedTile = null
+        // We typically don't clear history on shuffle in some games, but in others we do.
+        // If we keep history, undoing a match might be weird if the board is shuffled.
+        // Let's clear it to be safe.
+        commandHistory.clear()
+        undosRemaining = maxUndos // Optional: Reset undos? Or keep them? Let's keep usage but clear stack.
+        // Actually, if we clear history, we can't undo anymore, so undosRemaining is kind of moot until next move.
+        // But let's leave the count as is (e.g. "you have 2 undos left", but stack is empty so button disabled).
+    }
 }
 

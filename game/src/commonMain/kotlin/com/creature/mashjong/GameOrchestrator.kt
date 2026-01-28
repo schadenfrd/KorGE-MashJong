@@ -39,13 +39,14 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             maxHints = settings.maxHints
         )
         this.game = game
-        viewModel = GameViewModel(game)
+        viewModel = GameViewModel(game = game)
 
         // 2. Create Views
         // We pass a callback to the board view for tile clicks
         boardView = BoardView(
             factory = tileFactory,
-            onTileClick = ::handleTileClick
+            onTileClick = ::handleTileClick,
+            isBlockedPredicate = game::isTileBlocked
         )
 
         // Pass boardView to GameScene so it only handles layout/rendering
@@ -56,6 +57,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             viewModel = viewModel,
             onUndo = ::handleUndo,
             onHint = ::handleHint,
+            onShuffle = ::handleShuffle,
             onClose = onClose
         )
 
@@ -74,7 +76,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
         hudScene.initialize()
 
         // Initial visual refresh to show blocked states
-        boardView.refreshVisuals { game.isTileBlocked(it) }
+        boardView.refreshVisuals()
     }
 
     private fun handleTileClick(pos: TilePosition) {
@@ -88,7 +90,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             is MatchResult.Match -> {
                 boardView.removeTiles(listOf(result.tileA, result.tileB))
                 boardView.setSelection(null)
-                boardView.refreshVisuals { game.isTileBlocked(it) }
+                boardView.refreshVisuals()
                 checkGameOver()
             }
         }
@@ -98,17 +100,26 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
         if (isGameOver) return
         val restored = viewModel.onUndo()
         if (restored.isNotEmpty()) {
-            boardView.addTiles(restored)
-            boardView.refreshVisuals { game.isTileBlocked(it) }
+            boardView.addTiles(tilesToAdd = restored, animate = true)
+            boardView.refreshVisuals()
         }
     }
 
     private fun handleHint() {
         if (isGameOver) return
         val hint = viewModel.onHint()
+
         if (hint != null) {
             boardView.setSelection(hint.first)
+            boardView.showHint(t1 = hint.first, t2 = hint.second)
         }
+    }
+
+    private fun handleShuffle() {
+        if (isGameOver) return
+        val newTiles = viewModel.onShuffle()
+        boardView.renderBoard(tiles = newTiles)
+        boardView.refreshVisuals()
     }
 
     private fun checkGameOver() {

@@ -2,6 +2,8 @@ package com.creature.mashjong.presentation.view
 
 import korlibs.image.bitmap.BmpSlice
 import korlibs.image.color.Colors
+import korlibs.korge.tween.get
+import korlibs.korge.tween.tween
 import korlibs.korge.view.Container
 import korlibs.korge.view.Image
 import korlibs.korge.view.RoundRect
@@ -12,6 +14,7 @@ import korlibs.korge.view.scale
 import korlibs.korge.view.xy
 import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
+import korlibs.time.milliseconds
 
 class Tile(
     val id: Int,
@@ -65,5 +68,10 @@ class Tile(
 
     fun setBlocked(blocked: Boolean) {
         faceView.colorMul = if (blocked) Colors.DARKGRAY else Colors.WHITE
+    }
+
+    suspend fun pulse() {
+        tween(this::scale[1.1], time = 200.milliseconds)
+        tween(this::scale[1.0], time = 200.milliseconds)
     }
 }

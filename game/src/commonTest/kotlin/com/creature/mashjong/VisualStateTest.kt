@@ -41,13 +41,14 @@ class VisualStateTest {
         val dummyAtlas = Bitmap32(100, 100)
         factory.loadAtlas(dummyAtlas)
 
-        val boardView = BoardView(factory) { }
+        var blockedState = false
+        val boardView = BoardView(factory, { }, { blockedState })
 
         val pos = TilePosition(0, 0, 0, 0)
         boardView.addTiles(listOf(pos))
 
         // Get the tile
-        // Access private tileViews? No, can't. 
+        // Access private tileViews? No, can't.
         // But we can check children of boardView.
         // BoardView adds tiles as children.
         assertEquals(1, boardView.numChildren)
@@ -55,11 +56,13 @@ class VisualStateTest {
         val faceView = tile.getChildAt(1) as Image
 
         // Refresh with blocked = true
-        boardView.refreshVisuals { true }
+        blockedState = true
+        boardView.refreshVisuals()
         assertEquals(Colors.DARKGRAY, faceView.colorMul)
 
         // Refresh with blocked = false
-        boardView.refreshVisuals { false }
+        blockedState = false
+        boardView.refreshVisuals()
         assertEquals(Colors.WHITE, faceView.colorMul)
     }
 }

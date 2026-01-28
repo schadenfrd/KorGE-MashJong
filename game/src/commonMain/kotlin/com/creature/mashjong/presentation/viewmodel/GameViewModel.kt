@@ -29,6 +29,15 @@ class GameViewModel(private val game: MahjongGame) {
         return hint
     }
 
+    fun onShuffle(): List<TilePosition> {
+        game.shuffle()
+        // Shuffle clears history, so undos might not be relevant for *past* moves,
+        // but let's update the state just in case.
+        // Also if we reset undos to max, update it here.
+        _undosRemaining.value = game.undosRemaining
+        return game.getActiveTiles()
+    }
+
     fun onTileClick(tile: TilePosition): MatchResult {
         val result = game.onTileClick(tile)
         
