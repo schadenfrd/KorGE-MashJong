@@ -122,11 +122,11 @@ class TileFactory {
     }
 
     // Get a visual tile for a specific ID
-    fun createTile(id: Int): Tile {
+    fun createTile(id: Int, layer: Int): Tile {
         val slice = tileSlices[id]
             ?: throw IllegalStateException("Tile ID $id not found or atlas not loaded")
 
-        return Tile(id, slice)
+        return Tile(id = id, layer = layer, face = slice)
     }
 
     // Generate a full game deck (only logical info needed)

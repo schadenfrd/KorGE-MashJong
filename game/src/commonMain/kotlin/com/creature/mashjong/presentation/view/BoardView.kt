@@ -38,7 +38,7 @@ class BoardView(
         for (pos in tilesToAdd) {
             if (tileViews.containsKey(pos)) continue
 
-            val tile = factory.createTile(pos.tileId)
+            val tile = factory.createTile(pos.tileId, pos.layer)
 
             // Calculate 2D screen position from 3D grid
             var drawX = pos.x * overlapX

@@ -14,6 +14,7 @@ import korlibs.math.geom.Size
 
 class Tile(
     val id: Int,
+    val layer: Int,
     face: BmpSlice
 ) : Container() {
 
@@ -32,8 +33,8 @@ class Tile(
         roundRect(
             size = Size(WIDTH, HEIGHT),
             radius = RectCorners(corner = 8.0),
-            fill = Colors.BLACK.withAd(v = 0.5),
-        ).xy(x = 4.0, y = 4.0)
+            fill = Colors.BLACK.withAd(v = 0.7),
+        ).xy(x = 4.0 + layer * 2.0, y = 4.0 + layer * 2.0)
 
         // 2. Draw the face image centered on the tile
         image(texture = face).apply {

@@ -13,7 +13,7 @@ class TileCreationTest {
     fun testTileCreation() {
         val dummyBitmap = Bitmap32(10, 10, Colors.RED)
         val dummySlice = dummyBitmap.sliceWithSize(0, 0, 10, 10)
-        val tile = Tile(1, dummySlice)
+        val tile = Tile(1, 0, dummySlice)
 
         // Tile should have background (roundRect), face (image), and selectionView
         assertEquals(3, tile.numChildren)
