@@ -14,12 +14,21 @@ class GameViewModel(private val game: MahjongGame) {
     private val _hintsRemaining = MutableStateFlow(game.hintsRemaining)
     val hintsRemaining = _hintsRemaining.asStateFlow()
 
+    private val _shufflesRemaining = MutableStateFlow(game.shufflesRemaining)
+    val shufflesRemaining = _shufflesRemaining.asStateFlow()
+
     private val _gameState = MutableStateFlow(GameState.PLAYING)
     val gameState = _gameState.asStateFlow()
 
     fun onUndo(): List<TilePosition> {
         val restored = game.undo()
         _undosRemaining.value = game.undosRemaining
+        
+        // After undo, we might have moves again
+        if (game.hasValidMoves()) {
+            _gameState.value = GameState.PLAYING
+        }
+        
         return restored
     }
 
@@ -35,6 +44,23 @@ class GameViewModel(private val game: MahjongGame) {
         // but let's update the state just in case.
         // Also if we reset undos to max, update it here.
         _undosRemaining.value = game.undosRemaining
+        _shufflesRemaining.value = game.shufflesRemaining
+        
+        // After shuffle, check if we have moves (usually yes, but theoretically could still be stuck if bad luck? 
+        // Although shuffle keeps same tiles, just moves them? No, shuffle rearranges IDs on positions.
+        // So configuration changes. Check moves again.)
+        if (game.hasValidMoves()) {
+            _gameState.value = GameState.PLAYING
+        } else {
+            // Still stuck after shuffle? Unlikely but possible.
+            // Recursively check game over logic?
+             if (game.shufflesRemaining > 0 || game.undosRemaining > 0) {
+                 _gameState.value = GameState.NO_MOVES
+             } else {
+                 _gameState.value = GameState.LOST
+             }
+        }
+        
         return game.getActiveTiles()
     }
 
@@ -44,7 +70,11 @@ class GameViewModel(private val game: MahjongGame) {
         if (game.getActiveTiles().isEmpty()) {
             _gameState.value = GameState.WON
         } else if (!game.hasValidMoves()) {
-            _gameState.value = GameState.LOST
+            if (game.shufflesRemaining > 0 || game.undosRemaining > 0) {
+                _gameState.value = GameState.NO_MOVES
+            } else {
+                _gameState.value = GameState.LOST
+            }
         }
         
         return result

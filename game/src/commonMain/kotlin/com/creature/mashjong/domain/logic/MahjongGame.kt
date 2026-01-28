@@ -10,6 +10,7 @@ class MahjongGame(
     private val tileInfoProvider: (Int) -> TileInfo?,
     val maxUndos: Int = 3,
     val maxHints: Int = 3,
+    val maxShuffles: Int = 1,
     private val ruleSet: RuleSet = SolitaireMatchRule
 ) {
     private val tiles = initialTiles.toMutableList()
@@ -18,6 +19,8 @@ class MahjongGame(
     var undosRemaining = maxUndos
         private set
     var hintsRemaining = maxHints
+        private set
+    var shufflesRemaining = maxShuffles
         private set
     private val commandHistory = mutableListOf<Command>()
 
@@ -160,7 +163,9 @@ class MahjongGame(
     }
 
     fun shuffle() {
-        if (tiles.isEmpty()) return
+        if (tiles.isEmpty() || shufflesRemaining <= 0) return
+
+        shufflesRemaining--
 
         // 1. Snapshot current positions and IDs
         val positions = tiles.map { Triple(it.layer, it.x, it.y) }

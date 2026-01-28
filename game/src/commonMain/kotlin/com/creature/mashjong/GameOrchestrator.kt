@@ -36,7 +36,8 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
             initialTiles = levelData,
             tileInfoProvider = tileFactory::getTileInfo,
             maxUndos = settings.maxUndos,
-            maxHints = settings.maxHints
+            maxHints = settings.maxHints,
+            maxShuffles = settings.maxShuffles
         )
         this.game = game
         viewModel = GameViewModel(game = game)
@@ -97,12 +98,17 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     }
 
     private fun handleUndo() {
+        // If truly game over (WON/LOST), don't allow undo (unless we want to allow undoing the winning move? maybe, but let's stick to simple)
         if (isGameOver) return
+        
         val restored = viewModel.onUndo()
         if (restored.isNotEmpty()) {
             boardView.addTiles(tilesToAdd = restored, animate = true)
             boardView.refreshVisuals()
         }
+        
+        // Check if state changed (e.g. back to PLAYING or stuck)
+        checkGameOver()
     }
 
     private fun handleHint() {
@@ -120,13 +126,18 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
         val newTiles = viewModel.onShuffle()
         boardView.renderBoard(tiles = newTiles)
         boardView.refreshVisuals()
+        checkGameOver()
     }
 
     private fun checkGameOver() {
         val state = viewModel.gameState.value
-        if (state != GameState.PLAYING) {
+        
+        if (state == GameState.WON || state == GameState.LOST) {
             isGameOver = true
-            hudScene.showGameOver(victory = state == GameState.WON)
+            hudScene.showGameEnd(state)
+        } else if (state == GameState.NO_MOVES) {
+            isGameOver = false // Allow interactions (Undo/Shuffle)
+            hudScene.showGameEnd(state)
         }
     }
 }

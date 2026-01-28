@@ -2,6 +2,7 @@ package com.creature.mashjong.presentation.view
 
 import com.creature.mashjong.presentation.viewmodel.GameViewModel
 
+import com.creature.mashjong.domain.model.GameState
 import korlibs.image.color.Colors
 import korlibs.korge.input.onClick
 import korlibs.korge.ui.uiButton
@@ -96,29 +97,80 @@ class HudScene(
             onClick {
                 onShuffle()
             }
+            addUpdater {
+                text = "Shuffle (${viewModel.shufflesRemaining.value})"
+                enabled = viewModel.shufflesRemaining.value > 0
+            }
         }
     }
 
-    fun showGameOver(victory: Boolean) {
+    fun showGameEnd(state: GameState) {
         container {
-            val bg = solidRect(width = 500.0, height = 400.0, color = Colors.FORESTGREEN)
-            // Center on stage or parent
+            val bgWidth = 500.0
+            val bgHeight = 400.0
+            val bg = solidRect(width = bgWidth, height = bgHeight, color = Colors.FORESTGREEN)
             centerOnStage()
 
-            val msg = if (victory) "VICTORY!" else "No More Moves!"
-            val color = if (victory) Colors.GOLD else Colors.RED
+            // Block clicks on background
+            mouseEnabled = true
 
-            text(text = msg, textSize = 50.0, color = color) {
+            val msg = when (state) {
+                GameState.WON -> "VICTORY!"
+                GameState.NO_MOVES -> "No More Moves!"
+                else -> "Game Over!"
+            }
+            
+            val msgColor = if (state == GameState.WON) Colors.GOLD else Colors.RED
+
+            text(text = msg, textSize = 50.0, color = msgColor) {
                 centerOn(bg)
-                y -= 60
+                y -= 80
             }
 
-            uiButton(label = "Back to Menu", size = Size(width = 200, height = 70)) {
-                textSize = 30.0
-                centerOn(bg)
-                y += 60
-                onClick {
-                    onClose()
+            if (state == GameState.NO_MOVES) {
+                // Show Options
+                var currentY = -10.0
+                
+                if (viewModel.undosRemaining.value > 0) {
+                     uiButton(label = "Undo", size = Size(width = 200, height = 50)) {
+                        centerOn(bg)
+                        y = currentY
+                        onClick {
+                            this@container.removeFromParent()
+                            onUndo()
+                        }
+                    }
+                    currentY += 60
+                }
+                
+                if (viewModel.shufflesRemaining.value > 0) {
+                     uiButton(label = "Shuffle", size = Size(width = 200, height = 50)) {
+                        centerOn(bg)
+                        y = currentY
+                        onClick {
+                            this@container.removeFromParent()
+                            onShuffle()
+                        }
+                    }
+                    currentY += 60
+                }
+                
+                uiButton(label = "Quit", size = Size(width = 200, height = 50)) {
+                    centerOn(bg)
+                    y = currentY + 30 // Extra spacing
+                    onClick {
+                        onClose()
+                    }
+                }
+            } else {
+                // Victory or Defeat (Standard)
+                uiButton(label = "Back to Menu", size = Size(width = 200, height = 70)) {
+                    textSize = 30.0
+                    centerOn(bg)
+                    y += 60
+                    onClick {
+                        onClose()
+                    }
                 }
             }
         }
