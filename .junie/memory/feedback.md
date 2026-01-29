@@ -246,3 +246,11 @@
     "NEW INSTRUCTION": "WHEN configuring Android app branding THEN set launcher icon assets and android:label to 'Mish-MashJong'"
 }
 
+[2026-01-29 09:18] - Updated by Junie
+{
+    "TYPE": "negative",
+    "CATEGORY": "Popup layout misaligned",
+    "EXPECTATION": "They want the Undo/Shuffle/Quit popup to have buttons centered inside the popup with proper spacing, not overflowing the top, and the title clearly separated and centered above the buttons.",
+    "NEW INSTRUCTION": "WHEN creating in-game popup dialogs THEN center buttons and place title top-center with padding"
+}
+

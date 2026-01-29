@@ -2,6 +2,7 @@ package com.creature.mashjong.presentation.view
 
 import com.creature.mashjong.domain.model.TilePosition
 import com.creature.mashjong.presentation.infrastructure.TileFactory
+import korlibs.io.async.launchImmediately
 import korlibs.korge.input.onClick
 import korlibs.korge.input.onOut
 import korlibs.korge.input.onOver
@@ -11,7 +12,6 @@ import korlibs.korge.view.Container
 import korlibs.korge.view.xy
 import korlibs.math.geom.Point
 import korlibs.time.milliseconds
-import korlibs.io.async.launchImmediately
 import kotlinx.coroutines.Dispatchers
 
 class BoardView(
@@ -56,27 +56,22 @@ class BoardView(
             drawX += pos.layer * layerOffset.x
             drawY += pos.layer * layerOffset.y
 
-            tile.xy(x = drawX, y = drawY)
+            tile.apply {
+                xy(x = drawX, y = drawY)
+                // Store the logical position in the view for gameplay logic later (clicking)
+                name = "Tile_${pos.layer}_${pos.x}_${pos.y}"
 
-            // Store the logical position in the view for gameplay logic later (clicking)
-            tile.name = "Tile_${pos.layer}_${pos.x}_${pos.y}"
-
-            tile.onClick {
-                onTileClick(pos)
-            }
-
-            tile.onOver {
-                if (!isBlockedPredicate(pos)) {
-                    tile.scale = 1.05
+                onClick { onTileClick(pos) }
+                onOver {
+                    if (!isBlockedPredicate(pos)) {
+                        tile.scale = 1.05
+                    }
                 }
-            }
-
-            tile.onOut {
-                tile.scale = 1.0
+                onOut { tile.scale = 1.0 }
             }
 
             tileViews[pos] = tile
-            addChild(tile)
+            addChild(view = tile)
 
             if (animate) {
                 tile.alpha = 0.0

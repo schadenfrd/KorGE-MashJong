@@ -348,3 +348,23 @@
     "NEW INSTRUCTION": "WHEN blocked state query is private in MahjongGame THEN expose isTileBlocked as public"
 }
 
+[2026-01-29 09:19] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "open unrelated test file",
+    "MISSING STEPS": "run build",
+    "BOTTLENECK": "No post-edit validation; relied on manual y offsets without compile check.",
+    "PROJECT NOTE": "Popup elements center on bg; prefer relative positions to bg size over magic numbers.",
+    "NEW INSTRUCTION": "WHEN code modifications are applied THEN run project build to verify compilation"
+}
+
+[2026-01-29 09:25] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "fine-tune y offsets",
+    "MISSING STEPS": "run build, test popup",
+    "BOTTLENECK": "Initial trial-and-error offsets preceded a cleaner anchor-based refactor.",
+    "PROJECT NOTE": "Prefer Korge align helpers over manual coordinates for popups.",
+    "NEW INSTRUCTION": "WHEN popup title or buttons require repositioning THEN use anchor-based alignment, chain views, then run build and test popup"
+}
+

@@ -1,12 +1,12 @@
 package com.creature.mashjong.presentation.view
 
-import com.creature.mashjong.presentation.viewmodel.GameViewModel
-
 import com.creature.mashjong.domain.model.GameState
+import com.creature.mashjong.presentation.viewmodel.GameViewModel
 import korlibs.image.color.Colors
 import korlibs.korge.input.onClick
 import korlibs.korge.ui.uiButton
 import korlibs.korge.view.Container
+import korlibs.korge.view.View
 import korlibs.korge.view.addUpdater
 import korlibs.korge.view.align.alignBottomToBottomOf
 import korlibs.korge.view.align.alignRightToLeftOf
@@ -119,45 +119,51 @@ class HudScene(
                 GameState.NO_MOVES -> "No More Moves!"
                 else -> "Game Over!"
             }
-            
+
             val msgColor = if (state == GameState.WON) Colors.GOLD else Colors.RED
 
-            text(text = msg, textSize = 50.0, color = msgColor) {
+            val title = text(text = msg, textSize = 50.0, color = msgColor) {
+                textSize = 50.0
                 centerOn(bg)
-                y -= 80
+                alignTopToTopOf(bg, padding = 40.0)
             }
+
+            var previousView: View = title
+            val buttonSpacing = 20.0
 
             if (state == GameState.NO_MOVES) {
                 // Show Options
-                var currentY = -10.0
-                
                 if (viewModel.undosRemaining.value > 0) {
-                     uiButton(label = "Undo", size = Size(width = 200, height = 50)) {
+                    previousView = uiButton(label = "Undo", size = Size(width = 200, height = 50)) {
+                        textSize = 30.0
                         centerOn(bg)
-                        y = currentY
+                        y = previousView.y + previousView.height + buttonSpacing
+
                         onClick {
                             this@container.removeFromParent()
                             onUndo()
                         }
                     }
-                    currentY += 60
                 }
-                
+
                 if (viewModel.shufflesRemaining.value > 0) {
-                     uiButton(label = "Shuffle", size = Size(width = 200, height = 50)) {
+                    previousView = uiButton(label = "Shuffle", size = Size(width = 200, height = 50)) {
+                        textSize = 30.0
                         centerOn(bg)
-                        y = currentY
+                        y = previousView.y + previousView.height + buttonSpacing
+                        
                         onClick {
                             this@container.removeFromParent()
                             onShuffle()
                         }
                     }
-                    currentY += 60
                 }
-                
+
                 uiButton(label = "Quit", size = Size(width = 200, height = 50)) {
+                    textSize = 30.0
                     centerOn(bg)
-                    y = currentY + 30 // Extra spacing
+                    y = previousView.y + previousView.height + buttonSpacing
+                    
                     onClick {
                         onClose()
                     }
@@ -167,7 +173,8 @@ class HudScene(
                 uiButton(label = "Back to Menu", size = Size(width = 200, height = 70)) {
                     textSize = 30.0
                     centerOn(bg)
-                    y += 60
+                    y = previousView.y + previousView.height + buttonSpacing
+                    
                     onClick {
                         onClose()
                     }

@@ -71,7 +71,7 @@ class Tile(
     }
 
     suspend fun pulse() {
-        tween(this::scale[1.1], time = 200.milliseconds)
-        tween(this::scale[1.0], time = 200.milliseconds)
+        tween(this::scale[1.1], time = 300.milliseconds)
+        tween(this::scale[1.0], time = 300.milliseconds)
     }
 }
