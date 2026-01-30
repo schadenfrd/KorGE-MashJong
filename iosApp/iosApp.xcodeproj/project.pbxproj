@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXFileReference section */
-		9A02E0D4C29CCE322F35DD96 /* mish_mash_jong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mish_mash_jong.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A02E0D4C29CCE322F35DD96 /* Mish-MashJong.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Mish-MashJong.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		3BC984160BC6BB2C6576B764 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				9A02E0D4C29CCE322F35DD96 /* mish_mash_jong.app */,
+				9A02E0D4C29CCE322F35DD96 /* Mish-MashJong.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -87,7 +87,7 @@
 			packageProductDependencies = (
 			);
 			productName = iosApp;
-			productReference = 9A02E0D4C29CCE322F35DD96 /* mish_mash_jong.app */;
+			productReference = 9A02E0D4C29CCE322F35DD96 /* Mish-MashJong.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
