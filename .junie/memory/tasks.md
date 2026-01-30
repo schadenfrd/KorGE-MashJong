@@ -368,3 +368,43 @@
     "NEW INSTRUCTION": "WHEN popup title or buttons require repositioning THEN use anchor-based alignment, chain views, then run build and test popup"
 }
 
+[2026-01-30 11:15] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "open libs.versions.toml,open gradle.properties,open local.properties,open composeApp/build.gradle.kts,run tvosX64Test",
+    "MISSING STEPS": "ask user",
+    "BOTTLENECK": "Unclear whether disabling tvOS tests aligns with product requirements.",
+    "PROJECT NOTE": "Korge targetDefault() includes tvOS; exclude tvOS or disable its tests if not needed.",
+    "NEW INSTRUCTION": "WHEN logs contain 'tvos_simulator_arm64' unsupported simulator tests error THEN Ask if tvOS support is required before disabling tvOS tests"
+}
+
+[2026-01-30 11:29] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "suboptimal",
+    "REDUNDANT STEPS": "scan project,open file,search project",
+    "MISSING STEPS": "confirm composeResources enabled,verify resource path conventions,ask for intent to refactor",
+    "BOTTLENECK": "Unnecessary repo inspection delayed a purely conceptual answer.",
+    "PROJECT NOTE": "composeApp already applies composeMultiplatform; game is non-Compose, so inject resources into game from composeApp.",
+    "NEW INSTRUCTION": "WHEN user asks conceptual feasibility about resources THEN answer directly, list prerequisites, avoid code scans"
+}
+
+[2026-01-30 12:30] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "-",
+    "BOTTLENECK": "Android entry point needed direct access to composeResources Res.",
+    "PROJECT NOTE": "composeApp is an Android library; ensure a final app module merges the manifest or provides a launcher Activity.",
+    "NEW INSTRUCTION": "WHEN Android entry needs compose resources THEN move entry to composeApp androidMain to access Res"
+}
+
+[2026-01-30 17:04] - Updated by Junie - Trajectory analysis
+{
+    "PLAN QUALITY": "near-optimal",
+    "REDUNDANT STEPS": "-",
+    "MISSING STEPS": "define resource ids, update docs, add tests",
+    "BOTTLENECK": "Internal visibility of Res constrained module boundaries on Android.",
+    "PROJECT NOTE": "Res is internal to composeApp; consider a public wrapper or shared constants for resource ids.",
+    "NEW INSTRUCTION": "WHEN resource path literals appear in multiple places THEN centralize them as shared enum/constants"
+}
+

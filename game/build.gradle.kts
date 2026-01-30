@@ -32,3 +32,9 @@ korge {
 
     serializationJson()
 }
+
+// Fix for: Xcode does not support simulator tests for tvos_simulator_arm64.
+// We disable tvOS tests since the SDK is not available in the current environment.
+tasks.matching { it.name.contains("tvos") && it.name.endsWith("Test") }.configureEach {
+    enabled = false
+}

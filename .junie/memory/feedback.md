@@ -254,3 +254,11 @@
     "NEW INSTRUCTION": "WHEN creating in-game popup dialogs THEN center buttons and place title top-center with padding"
 }
 
+[2026-01-30 11:27] - Updated by Junie
+{
+    "TYPE": "correction",
+    "CATEGORY": "Unified resources via Compose",
+    "EXPECTATION": "They want one canonical location for raw assets using composeResources/files so both Android and iOS load them without per-platform copy steps.",
+    "NEW INSTRUCTION": "WHEN loading shared raw assets THEN place in composeResources/files and use Res.readBytes"
+}
+

@@ -10,8 +10,7 @@ import com.creature.mashjong.presentation.view.BoardView
 import com.creature.mashjong.presentation.view.GameScene
 import com.creature.mashjong.presentation.view.HudScene
 import com.creature.mashjong.presentation.viewmodel.GameViewModel
-import korlibs.image.format.readBitmap
-import korlibs.io.file.std.resourcesVfs
+import korlibs.image.bitmap.Bitmap
 import korlibs.korge.view.Container
 
 class GameOrchestrator(val onClose: () -> Unit) : Container() {
@@ -22,10 +21,9 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     private lateinit var hudScene: HudScene
     private var isGameOver = false
 
-    suspend fun start(settings: GameSettings = GameSettings()) {
+    fun start(atlas: Bitmap, settings: GameSettings = GameSettings()) {
         // 1. Load Assets & Create Game
         val tileFactory = TileFactory()
-        val atlas = resourcesVfs[settings.atlasPath].readBitmap()
         tileFactory.loadAtlas(atlas = atlas)
 
         val deck = tileFactory.createDeck()
@@ -100,13 +98,13 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
     private fun handleUndo() {
         // If truly game over (WON/LOST), don't allow undo (unless we want to allow undoing the winning move? maybe, but let's stick to simple)
         if (isGameOver) return
-        
+
         val restored = viewModel.onUndo()
         if (restored.isNotEmpty()) {
             boardView.addTiles(tilesToAdd = restored, animate = true)
             boardView.refreshVisuals()
         }
-        
+
         // Check if state changed (e.g. back to PLAYING or stuck)
         checkGameOver()
     }
@@ -131,7 +129,7 @@ class GameOrchestrator(val onClose: () -> Unit) : Container() {
 
     private fun checkGameOver() {
         val state = viewModel.gameState.value
-        
+
         if (state == GameState.WON || state == GameState.LOST) {
             isGameOver = true
             hudScene.showGameEnd(state)

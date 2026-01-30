@@ -1,5 +1,6 @@
 package com.creature.mashjong
 
+import korlibs.image.bitmap.Bitmap
 import korlibs.image.color.Colors
 import korlibs.image.color.RGBA
 import korlibs.korge.Korge
@@ -12,9 +13,13 @@ import korlibs.math.geom.ScaleMode
 import korlibs.math.geom.Size
 import korlibs.render.GameWindow
 
-suspend fun main() = createGameWindow()
+suspend fun main() {
+    // This entry point is no longer used when running via ComposeApp.
+    // Kept for Korge build compatibility.
+}
 
 suspend fun createGameWindow(
+    atlas: Bitmap,
     gameWindow: GameWindow? = null,
     scale: Scale = Scale(scale = 1),
     windowSize: Size = DefaultViewport.SIZE,
@@ -43,10 +48,10 @@ suspend fun createGameWindow(
     quality = quality,
     title = title,
 ) {
-    startMashjong(onClose = onClose)
+    startMashjong(atlas, onClose)
 }
 
-suspend fun Stage.startMashjong(onClose: () -> Unit) {
+suspend fun Stage.startMashjong(atlas: Bitmap, onClose: () -> Unit) {
     removeChildren()
 
     // Use the Orchestrator to manage the game session
@@ -55,5 +60,5 @@ suspend fun Stage.startMashjong(onClose: () -> Unit) {
     // Add to stage BEFORE calling start, so it has access to stage/views
     addChild(view = orchestrator)
 
-    orchestrator.start()
+    orchestrator.start(atlas = atlas)
 }
